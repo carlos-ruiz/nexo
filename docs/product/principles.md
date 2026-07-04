@@ -2,13 +2,28 @@
 title: Product Principles
 status: Approved
 version: 1.0.0
+
 owner: Carlos Ruiz
-reviewers:
+
+authors:
+  - Carlos Ruiz
   - ChatGPT (Principal Software Architect)
+
 last_updated: 2026-07-02
-related:
+
+depends_on:
   - vision.md
+
+related:
   - scope.md
+
+supersedes: null
+
+superseded_by: null
+
+tags:
+  - product
+  - principles
 ---
 
 # Product Principles
@@ -321,3 +336,25 @@ Nexo is not an expense tracker.
 Nexo is a Financial Operating System.
 
 Every feature should move the platform closer to that vision.
+
+---
+
+# Document Status
+
+**Status**
+
+Approved
+
+**Version**
+
+1.0.0
+
+**Next Document**
+
+`scope.md`
+
+**Notes**
+
+This document defines the product principles used to evaluate every feature, UX decision, architectural decision, and AI capability.
+
+Changes to this document should be carefully reviewed because they directly influence the product philosophy.

@@ -2,12 +2,28 @@
 title: Product Vision
 status: Approved
 version: 1.0.0
+
 owner: Carlos Ruiz
-reviewers:
+
+authors:
+  - Carlos Ruiz
   - ChatGPT (Principal Software Architect)
+
 last_updated: 2026-07-02
+
+depends_on: []
+
 related:
-  - PRODUCT.md
+  - principles.md
+  - scope.md
+
+supersedes: null
+
+superseded_by: null
+
+tags:
+  - product
+  - vision
 ---
 
 # Product Vision
@@ -323,3 +339,25 @@ Nexo is not designed to become the application with the most features.
 It is designed to become the application users trust the most when making financial decisions.
 
 Every architectural decision, every line of code, and every future feature should reinforce that goal.
+
+---
+
+# Document Status
+
+**Status**
+
+Approved
+
+**Version**
+
+1.0.0
+
+**Next Document**
+
+`principles.md`
+
+**Notes**
+
+This document defines the long-term vision of Nexo.
+
+Changes to this document are expected to be rare and should require an ADR because they may impact the entire product strategy.
