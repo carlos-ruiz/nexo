@@ -288,7 +288,7 @@ Support:
 
 # 4. AI Scope
 
-The MVP includes AI-assisted capabilities.
+AI-assisted capabilities are part of the product scope.
 
 Examples:
 
@@ -503,7 +503,7 @@ Approved
 
 **Version**
 
-1.0.1
+1.0.0
 
 **Next Document**
 

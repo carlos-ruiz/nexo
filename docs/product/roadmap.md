@@ -300,7 +300,21 @@ The MVP focuses on solving the core problem:
 - System categories
 - Custom categories
 - Subcategories
-- Tags
+
+---
+
+### Tags
+
+- Custom tags
+- Multi-tag assignment on transactions
+
+---
+
+### Merchants
+
+- Merchant registry
+- Merchant assignment on transactions
+- Normalized merchant names
 
 ---
 
@@ -465,7 +479,7 @@ Budgets become significantly more powerful by supporting:
 - Account-specific budgets
 - Budget rollover
 - Budget alerts
-- Budget forecasting
+- Budget planning
 
 ---
 
@@ -540,7 +554,7 @@ Savings goals become more sophisticated by supporting:
 - Automatic progress calculation
 - Scheduled contributions
 - Priority levels
-- Completion forecasting
+- Completion estimate
 
 ---
 
@@ -611,7 +625,7 @@ These capabilities are introduced in later phases.
 - Users can plan future income and expenses.
 - The financial calendar provides a complete overview of upcoming financial events.
 - Debt repayment progress can be tracked and simulated.
-- Savings goals support scheduled contributions and forecasting.
+- Savings goals support scheduled contributions and completion estimates.
 - Reports provide meaningful insights across multiple time periods.
 - Users can efficiently organize and search their financial information.
 

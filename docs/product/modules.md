@@ -1,7 +1,7 @@
 ---
 title: Product Modules
 status: Approved
-version: 2.0.0
+version: 1.0.0
 
 owner: Carlos Ruiz
 
@@ -147,9 +147,12 @@ Modules:
 - Accounts
 - Financial Events
 - Categories
+- Tags
+- Merchants
 - Credit Cards
 - Loans
 - Assets
+- Liabilities
 - Budgets
 - Goals
 
@@ -367,14 +370,12 @@ Categories improve reporting and financial analysis without affecting financial 
 
 - Category
 - Category Tree
-- Tag
 
 ## Public Capabilities
 
 - Create Category
 - Update Category
 - Archive Category
-- Manage Tags
 
 ## Published Events
 
@@ -400,7 +401,110 @@ None
 
 ---
 
-# 6.4 Credit Cards
+# 6.4 Tags
+
+## Purpose
+
+Manage user-defined labels for organizing and filtering financial events.
+
+Tags provide a flexible, free-form classification system that is completely independent from the category hierarchy.
+
+## Responsibilities
+
+- Create and manage tags
+- Archive tags
+- Support multi-tag assignment on financial events
+
+## Owned Concepts
+
+- Tag
+
+## Public Capabilities
+
+- Create Tag
+- Update Tag
+- Archive Tag
+- List Tags
+
+## Published Events
+
+- TagCreated
+- TagUpdated
+- TagArchived
+
+## Consumed Events
+
+None
+
+## Key Invariants
+
+- Tags are independent from categories.
+- Tag names must be unique per user.
+- Archived tags remain available for historical records.
+- Tags never affect financial calculations.
+
+## Future Evolution
+
+- Tag groups
+- AI-suggested tags
+- Tag-based analytics
+
+---
+
+# 6.5 Merchants
+
+## Purpose
+
+Manage the registry of merchants where financial transactions occur.
+
+A Merchant represents the business or entity that received payment in a transaction. Merchants are independent from categories and tags — they answer "who was paid", not "what type of spending it was".
+
+## Responsibilities
+
+- Register and manage merchants
+- Normalize merchant names to avoid duplicates
+- Expose merchant lookup for Financial Events
+
+## Owned Concepts
+
+- Merchant
+- Merchant Name (normalized)
+
+## Public Capabilities
+
+- Register Merchant
+- Update Merchant
+- Find or Create Merchant
+- List Merchants
+
+## Published Events
+
+- MerchantRegistered
+- MerchantUpdated
+
+## Consumed Events
+
+None
+
+Merchants are request-driven. Financial Events reference merchants through public capabilities.
+
+## Key Invariants
+
+- Merchants are independent from categories and tags.
+- Merchant data never affects financial calculations.
+- Merchants are shared across transactions and never duplicated per transaction.
+- A merchant's normalized name must be unique per user.
+
+## Future Evolution
+
+- AI-powered merchant recognition and deduplication
+- Merchant logo and branding
+- Merchant location data
+- Global merchant database
+
+---
+
+# 6.6 Credit Cards
 
 ## Purpose
 
@@ -458,7 +562,7 @@ Credit Cards model billing cycles, statements and available credit.
 
 ---
 
-# 6.5 Loans
+# 6.7 Loans
 
 ## Purpose
 
@@ -511,7 +615,7 @@ Loans represent long-term financial obligations.
 
 ---
 
-# 6.6 Assets
+# 6.8 Assets
 
 ## Purpose
 
@@ -561,7 +665,64 @@ None
 
 ---
 
-# 6.7 Budgets
+# 6.9 Liabilities
+
+## Purpose
+
+Manage informal financial obligations that are not formal loan instruments.
+
+Liabilities represent money owed to individuals, family members, or other non-institutional counterparties without a structured repayment schedule.
+
+## Responsibilities
+
+- Register liabilities
+- Track outstanding balances
+- Record partial payments
+- Mark liabilities as settled
+
+## Owned Concepts
+
+- Liability
+- Liability Balance
+- Liability Counterparty
+
+## Public Capabilities
+
+- Register Liability
+- Update Liability
+- Record Payment
+- Settle Liability
+- Calculate Outstanding Balance
+
+## Published Events
+
+- LiabilityRegistered
+- LiabilityUpdated
+- LiabilityPaymentRecorded
+- LiabilitySettled
+
+## Consumed Events
+
+- ExpenseRegistered
+- TransferCompleted
+
+## Key Invariants
+
+- Outstanding balance cannot become negative.
+- Settled liabilities cannot receive new payments.
+- Every liability belongs to exactly one owner.
+- Liabilities never generate amortization schedules.
+- Liabilities are independent from the Loans module.
+
+## Future Evolution
+
+- Shared liabilities between users
+- Informal interest tracking
+- Document attachments for liability agreements
+
+---
+
+# 6.10 Budgets
 
 ## Purpose
 
@@ -611,7 +772,7 @@ Help users plan and monitor spending.
 
 ---
 
-# 6.8 Goals
+# 6.11 Goals
 
 ## Purpose
 
@@ -650,6 +811,8 @@ Goals measure progress without modifying financial data.
 - IncomeRegistered
 - ExpenseRegistered
 - LoanPaymentApplied
+- LiabilityPaymentRecorded
+- LiabilitySettled
 - AssetValuationUpdated
 
 ## Key Invariants
@@ -1200,7 +1363,7 @@ Approved
 
 **Version**
 
-2.0.0
+1.0.0
 
 **Next Document**
 
