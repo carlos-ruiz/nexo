@@ -10,6 +10,8 @@ Full product documentation lives in `docs/product/`. Read in this order:
 - `docs/product/scope.md` — what is and is not in scope
 - `docs/product/modules.md` — official module boundaries (read before touching any domain code)
 - `docs/product/roadmap.md` — what gets built and when
+- `docs/product/domain-model.md` — bounded contexts, aggregates, domain events, and invariants
+- `docs/product/architecture.md` — folder structure, tech stack decisions, engineering standards
 
 ---
 
@@ -17,56 +19,39 @@ Full product documentation lives in `docs/product/`. Read in this order:
 
 Nexo is a **Modular Monolith** using **Hexagonal Architecture** and **Domain-Driven Design**.
 
-Three layers. Dependencies always point downward — never upward:
+Three layers. Dependencies always point upward — lower layers never depend on higher layers:
 
 ```
-Business Capabilities      →  Reports, AI
+Business Capabilities      →  Insights (Reports, AI)
         ▲
-Core Financial Domain      →  Accounts, Financial Events, Categories, Tags,
-                               Merchants, Credit Cards, Loans, Assets,
-                               Liabilities, Budgets, Goals
+Core Financial Domain      →  Finance, Planning, Portfolio
         ▲
-Platform Services          →  Identity, Authorization, Localization,
-                               Notifications, Audit, Configuration,
-                               Feature Flags, Logging, Observability
+Platform Services          →  Identity, Administration, Integrations
 ```
 
 - Core Financial Domain never depends on Business Capabilities
 - Platform Services never contain business rules
 - Business Capabilities consume the Core Financial Domain but never own financial data
 
+Each module is internally structured into three layers: **Domain** (pure business logic) → **Application** (use cases) → **Infrastructure** (Prisma, external adapters). See `docs/product/architecture.md` for the full breakdown.
+
 ---
 
 ## Module Map
 
-Every business concept belongs to exactly one module. When writing code, place it in the module that owns the concept.
+The codebase is organized into seven modules, one per Bounded Context. Every business concept belongs to exactly one module.
 
-### Core Financial Domain
+| Module | Layer | Contains |
+|---|---|---|
+| `identity` | Platform Services | User, authentication (Clerk ACL), authorization, preferences |
+| `administration` | Platform Services | Notifications, audit log, feature flags, configuration, observability |
+| `integrations` | Platform Services | External institution connectors, import/export jobs _(future)_ |
+| `finance` | Core Financial Domain | Accounts, Transactions, Categories, Tags, Merchants |
+| `planning` | Core Financial Domain | Budgets, Goals, Cash Flow Plans |
+| `portfolio` | Core Financial Domain | Assets, Liabilities, Credit Cards, Loans |
+| `insights` | Business Capabilities | Reports, Dashboard, AI Conversations, Recommendations, Insights |
 
-| Module | Owns |
-|---|---|
-| **Accounts** | Account, Account Balance, Account Status, Account Currency |
-| **Financial Events** | Financial Event, Financial Movement, Event Metadata |
-| **Categories** | Category, Category Tree |
-| **Tags** | Tag |
-| **Merchants** | Merchant, Merchant Name (normalized) |
-| **Credit Cards** | Credit Card, Statement, Billing Cycle, Available Credit |
-| **Loans** | Loan, Payment Schedule, Outstanding Balance |
-| **Assets** | Asset, Asset Valuation, Asset Type |
-| **Liabilities** | Liability, Liability Balance, Liability Counterparty |
-| **Budgets** | Budget, Budget Period, Budget Target |
-| **Goals** | Goal, Goal Progress, Goal Milestone |
-
-### Business Capabilities
-
-| Module | Owns |
-|---|---|
-| **Reports** | Dashboard, Report Definition, Saved Report, Read Model, KPI |
-| **AI** | AI Conversation, AI Recommendation, AI Insight, Prompt Template, AI Feedback |
-
-### Platform Services
-
-Identity, Authorization, Localization, Notifications, Audit, Configuration, Feature Flags, Logging, Observability.
+For the full list of aggregates, entities, and value objects owned by each module, see `docs/product/domain-model.md`.
 
 ---
 
@@ -75,9 +60,9 @@ Identity, Authorization, Localization, Notifications, Audit, Configuration, Feat
 These rules must never be violated. If a feature would require breaking one, raise it explicitly.
 
 ### Financial History
-- Financial history is immutable. Records are never edited or deleted.
-- Corrections are represented as new Financial Events, never by rewriting existing ones.
-- Financial Events are append-only.
+- Financial history is immutable. Transactions are never edited or deleted.
+- Corrections are represented as new Transactions, never by rewriting existing ones.
+- Transactions are append-only.
 
 ### AI Behavior
 - AI never modifies financial records automatically.
@@ -92,14 +77,14 @@ These rules must never be violated. If a feature would require breaking one, rai
 - Shared ownership is forbidden.
 
 ### Financial Calculations
-- Account balances are derived from Financial Events, never stored as independent values.
-- Budgets never modify financial records — they read from Financial Events.
+- Account balances are derived from Transactions, never stored as independent values.
+- Budgets never modify financial records — they read from Transactions.
 - Goals never modify financial records — they read from existing financial information.
-- Reports never modify business data and never query transactional models directly.
+- Reports never modify business data and never query transactional aggregates directly.
 - Tags and Merchants never affect financial calculations.
 
 ### Accounts
-- Archived accounts cannot receive new Financial Events.
+- Archived accounts cannot receive new Transactions.
 - Every account has exactly one base currency.
 
 ### Credit Cards
@@ -114,7 +99,7 @@ These rules must never be violated. If a feature would require breaking one, rai
 ### Liabilities
 - Outstanding balance cannot become negative.
 - Settled liabilities cannot receive new payments.
-- Liabilities are independent from the Loans module.
+- Liabilities are independent from the Portfolio Loans sub-domain.
 
 ### Categories and Tags
 - Tags are independent from categories.
@@ -138,7 +123,7 @@ These rules must never be violated. If a feature would require breaking one, rai
 - Business logic inside Platform Services.
 - Shared ownership of any business concept.
 
-Violations require an Architecture Decision Record (ADR).
+Violations require an Architecture Decision Record (ADR) in `docs/adr/`.
 
 ---
 
@@ -146,9 +131,9 @@ Violations require an Architecture Decision Record (ADR).
 
 Modules communicate only through explicit public contracts. Preferred mechanisms in order:
 
-1. **Public Application Services** — call a module's exposed service
+1. **Public Application Services** — call a module's exposed application service
 2. **Domain Events** — publish/subscribe to business events
-3. **Read Models** — pre-built projections consumed by Reports and AI
+3. **Read Models** — pre-built projections consumed by Insights
 4. **Query Services** — public read-only queries exposed by a module
 
 Direct access to another module's persistence layer is strictly forbidden.
@@ -157,33 +142,95 @@ Direct access to another module's persistence layer is strictly forbidden.
 
 ## Shared Kernel
 
-A minimal Shared Kernel may exist for cross-module primitives. It must only contain:
-- Shared interfaces
-- Primitive value objects
-- Domain-independent utilities
-- Common result types
-- Error abstractions
+The Shared Kernel lives at `src/shared-kernel/` and contains exactly four primitives:
 
-The Shared Kernel must never contain business logic. When in doubt, do not put code there.
+- `Money` — amount and currency pair
+- `Currency` — ISO 4217 currency code and symbol
+- `DateRange` — start and end date pair
+- `UserId` — stable reference to an authenticated user
+
+The Shared Kernel must never contain business logic. It must never import from any module. When in doubt, do not put code there.
 
 ---
 
 ## Tech Stack
 
-| Concern | Technology |
-|---|---|
-| Framework | Next.js |
-| Language | TypeScript |
-| Database | PostgreSQL |
-| ORM | Prisma |
-| Authentication | Clerk |
-| Styling | Tailwind CSS |
-| UI Components | shadcn/ui |
-| Internationalization | next-intl |
-| Progressive Web App | PWA support |
-| Linting | ESLint |
-| Formatting | Prettier |
-| Git hooks | Husky |
+| Concern | Technology | Decision |
+|---|---|---|
+| Framework | Next.js | **App Router** — not Pages Router |
+| Language | TypeScript | Strict mode enabled. No `any` in domain or application code |
+| Database | PostgreSQL | One database, ACID transactions, immutable financial history |
+| ORM | Prisma | Infrastructure layer only — never in domain or application code |
+| Authentication | Clerk | Anti-corruption layer in `identity` module. `UserId` is the only shared reference |
+| Styling | Tailwind CSS | |
+| UI Components | shadcn/ui | Components copied to `src/components/ui/` — no runtime dependency |
+| Internationalization | next-intl | Presentation layer only. Never in domain or application code |
+| Progressive Web App | PWA support | |
+| Linting | ESLint | Errors block CI |
+| Formatting | Prettier | Applied automatically on commit via Husky |
+| Git hooks | Husky | |
+| Unit + Integration tests | Vitest | |
+| End-to-end tests | Playwright | |
+| CI/CD | GitHub Actions | |
+
+---
+
+## Engineering Standards
+
+### Directory Structure
+
+```
+src/
+├── app/                    # Next.js App Router — presentation layer
+├── modules/               # One folder per Bounded Context
+│   └── {module}/
+│       ├── domain/        # Aggregates, value objects, domain services, port interfaces
+│       ├── application/   # Commands, queries, event handlers
+│       └── infrastructure/# Prisma repositories, external adapters
+├── shared-kernel/          # Money, Currency, DateRange, UserId only
+├── components/             # Shared UI components
+└── lib/                    # Framework configuration utilities
+```
+
+Full directory structure is defined in `docs/product/architecture.md` Section 5.
+
+---
+
+### Commit Conventions
+
+Nexo follows [Conventional Commits](https://www.conventionalcommits.org/).
+
+```
+<type>(<scope>): <description>
+```
+
+**Types**: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `perf`
+
+**Scopes**: `finance`, `planning`, `portfolio`, `insights`, `identity`, `administration`, `shared-kernel`, `app`, `infra`, `docs`
+
+Example: `feat(finance): add transaction reversal command`
+
+---
+
+### Branch Strategy
+
+Nexo uses **GitHub Flow**:
+
+- `main` is always deployable.
+- All work happens on short-lived branches: `feat/`, `fix/`, `docs/`, `chore/`
+- Changes merge to `main` via pull request after review and CI passage.
+
+---
+
+### Testing
+
+| Level | Scope | Framework | Rule |
+|---|---|---|---|
+| Unit | Domain layer only | Vitest | No DB, no network, no framework. Every invariant covered. |
+| Integration | Application layer with real DB | Vitest | Real PostgreSQL — mocks not permitted. |
+| E2E | Critical user flows | Playwright | Runs against staging. |
+
+Unit and integration tests are co-located inside the module directory. E2E tests live in `tests/e2e/`.
 
 ---
 
@@ -201,16 +248,9 @@ Currency support is a core domain capability, not a formatting concern. The plat
 
 ---
 
-## What is Not Yet Defined (Phase 0)
+## Pending (Phase 0)
 
-The following will be established during Phase 0 and this file will be updated:
+The following will be defined as part of the development environment setup:
 
-- Folder and directory structure
-- Module directory conventions
-- Testing frameworks and strategy (unit, integration, E2E)
-- Commit message format and conventions
-- Branch strategy
-- CI/CD platform and pipeline
-- Next.js router choice (App Router vs Pages Router)
-- Environment variables and local setup instructions
+- Environment variables and `.env.example` structure
 - How to run the project locally
