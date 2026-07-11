@@ -1,6 +1,6 @@
 ---
 title: Domain Model
-status: Draft
+status: Approved
 version: 1.0.0
 
 owner: Carlos Ruiz
@@ -162,25 +162,25 @@ Authentication is delegated to Clerk. The context defines an anti-corruption lay
 
 ### Aggregates
 
-#### User *(Aggregate Root)*
+#### User _(Aggregate Root)_
 
 Represents an authenticated individual using the platform.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| User | Aggregate root. Represents a registered platform user. |
+| Entity | Role                                                   |
+| ------ | ------------------------------------------------------ |
+| User   | Aggregate root. Represents a registered platform user. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| UserId | Stable unique identifier. Referenced by all other contexts. |
-| Email | The user's email address. |
-| UserProfile | Display name, avatar, and time zone. |
+| Value Object    | Description                                                      |
+| --------------- | ---------------------------------------------------------------- |
+| UserId          | Stable unique identifier. Referenced by all other contexts.      |
+| Email           | The user's email address.                                        |
+| UserProfile     | Display name, avatar, and time zone.                             |
 | UserPreferences | Language, default currency, theme, and notification preferences. |
-| UserStatus | Enumeration: Active, Deactivated. |
+| UserStatus      | Enumeration: Active, Deactivated.                                |
 
 **Invariants**
 
@@ -190,18 +190,18 @@ Represents an authenticated individual using the platform.
 
 ### Domain Events
 
-| Event | Trigger |
-|---|---|
-| UserRegistered | A new user completed registration. |
-| UserProfileUpdated | Profile information was modified. |
-| UserPreferencesUpdated | User preferences were changed. |
-| UserDeactivated | A user account was deactivated. |
+| Event                  | Trigger                            |
+| ---------------------- | ---------------------------------- |
+| UserRegistered         | A new user completed registration. |
+| UserProfileUpdated     | Profile information was modified.  |
+| UserPreferencesUpdated | User preferences were changed.     |
+| UserDeactivated        | A user account was deactivated.    |
 
 ### Context Relationships
 
-| Related Context | Direction | Mechanism |
-|---|---|---|
-| All contexts | Upstream provider | Every context references UserId to scope its data to a specific user. No other context owns user identity. |
+| Related Context | Direction         | Mechanism                                                                                                  |
+| --------------- | ----------------- | ---------------------------------------------------------------------------------------------------------- |
+| All contexts    | Upstream provider | Every context references UserId to scope its data to a specific user. No other context owns user identity. |
 
 ---
 
@@ -223,7 +223,7 @@ Finance is the core domain of Nexo. It owns the authoritative and immutable hist
 
 ### Aggregates
 
-#### Account *(Aggregate Root)*
+#### Account _(Aggregate Root)_
 
 Represents a financial account owned by the user.
 
@@ -231,19 +231,19 @@ The balance of an Account is derived from Transactions — it is never stored in
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity  | Role                                            |
+| ------- | ----------------------------------------------- |
 | Account | Aggregate root. Represents a financial account. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| AccountId | Unique identity of the account. |
-| AccountName | Human-readable label given by the user. |
-| AccountType | Enumeration: Cash, Checking, Savings, Debit Card. |
-| AccountStatus | Enumeration: Active, Archived. |
-| Currency | The base currency of the account. References `Currency` from the Shared Kernel. |
+| Value Object  | Description                                                                     |
+| ------------- | ------------------------------------------------------------------------------- |
+| AccountId     | Unique identity of the account.                                                 |
+| AccountName   | Human-readable label given by the user.                                         |
+| AccountType   | Enumeration: Cash, Checking, Savings, Debit Card.                               |
+| AccountStatus | Enumeration: Active, Archived.                                                  |
+| Currency      | The base currency of the account. References `Currency` from the Shared Kernel. |
 
 **Invariants**
 
@@ -254,25 +254,25 @@ The balance of an Account is derived from Transactions — it is never stored in
 
 ---
 
-#### Transaction *(Aggregate Root)*
+#### Transaction _(Aggregate Root)_
 
 Represents a single financial occurrence that affects the user's financial position. Transactions are immutable once recorded.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| Transaction | Aggregate root. Represents one financial occurrence in the user's history. |
+| Entity              | Role                                                                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Transaction         | Aggregate root. Represents one financial occurrence in the user's history.                                                           |
 | TransactionMovement | One side of a financial movement within a transaction. A Transfer produces exactly two balanced movements: one debit and one credit. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| TransactionId | Unique identity of the transaction. |
-| TransactionType | Enumeration: Income, Expense, Transfer, Adjustment. |
-| TransactionDate | The business date on which the transaction occurred. |
-| Money | Amount and currency. Defined in the Shared Kernel. |
+| Value Object        | Description                                                |
+| ------------------- | ---------------------------------------------------------- |
+| TransactionId       | Unique identity of the transaction.                        |
+| TransactionType     | Enumeration: Income, Expense, Transfer, Adjustment.        |
+| TransactionDate     | The business date on which the transaction occurred.       |
+| Money               | Amount and currency. Defined in the Shared Kernel.         |
 | TransactionMetadata | Contextual information: notes, reference number. Optional. |
 
 **Invariants**
@@ -286,24 +286,24 @@ Represents a single financial occurrence that affects the user's financial posit
 
 ---
 
-#### Category *(Aggregate Root)*
+#### Category _(Aggregate Root)_
 
 Represents a classification node in the category hierarchy. Categories organize Transactions for reporting and analysis — they never affect financial calculations.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity   | Role                                                                 |
+| -------- | -------------------------------------------------------------------- |
 | Category | Aggregate root. Represents one node in the classification hierarchy. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| CategoryId | Unique identity of the category. |
-| CategoryName | Human-readable label. |
-| CategoryType | Enumeration: System, User-Defined. |
-| CategoryStatus | Enumeration: Active, Archived. |
+| Value Object     | Description                                                        |
+| ---------------- | ------------------------------------------------------------------ |
+| CategoryId       | Unique identity of the category.                                   |
+| CategoryName     | Human-readable label.                                              |
+| CategoryType     | Enumeration: System, User-Defined.                                 |
+| CategoryStatus   | Enumeration: Active, Archived.                                     |
 | ParentCategoryId | Reference to the parent category. Absent on root-level categories. |
 
 **Invariants**
@@ -315,23 +315,23 @@ Represents a classification node in the category hierarchy. Categories organize 
 
 ---
 
-#### Tag *(Aggregate Root)*
+#### Tag _(Aggregate Root)_
 
 Represents a user-defined label used to organize and filter Transactions. Tags are independent from the category hierarchy.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| Tag | Aggregate root. Represents a user-defined label. |
+| Entity | Role                                             |
+| ------ | ------------------------------------------------ |
+| Tag    | Aggregate root. Represents a user-defined label. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| TagId | Unique identity of the tag. |
-| TagName | The label text. Must be unique per user. |
-| TagStatus | Enumeration: Active, Archived. |
+| Value Object | Description                              |
+| ------------ | ---------------------------------------- |
+| TagId        | Unique identity of the tag.              |
+| TagName      | The label text. Must be unique per user. |
+| TagStatus    | Enumeration: Active, Archived.           |
 
 **Invariants**
 
@@ -342,22 +342,22 @@ Represents a user-defined label used to organize and filter Transactions. Tags a
 
 ---
 
-#### Merchant *(Aggregate Root)*
+#### Merchant _(Aggregate Root)_
 
 Represents a business or entity that receives payments from the user. A Merchant answers "who was paid", independently from how the payment was classified (Category) or labeled (Tag).
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity   | Role                                                 |
+| -------- | ---------------------------------------------------- |
 | Merchant | Aggregate root. Represents a payee in a transaction. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| MerchantId | Unique identity of the merchant. |
-| MerchantName | The name as provided by the user. |
+| Value Object           | Description                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------- |
+| MerchantId             | Unique identity of the merchant.                                                            |
+| MerchantName           | The name as provided by the user.                                                           |
 | NormalizedMerchantName | Canonical version of the name used to prevent duplicates within a user's merchant registry. |
 
 **Invariants**
@@ -370,42 +370,42 @@ Represents a business or entity that receives payments from the user. A Merchant
 
 ### Domain Services
 
-| Service | Responsibility |
-|---|---|
-| AccountBalanceService | Projects Transactions to derive the current balance of an Account. Balance is never persisted independently. |
-| TransactionFactory | Constructs valid Transactions and their movements based on transaction type. Ensures structural correctness before persistence. |
-| TransactionReversal | Creates a compensating Transaction to reverse a previously recorded one. Preserves the immutability of the original. |
-| CategoryHierarchyService | Validates that category relationships do not introduce cycles. Provides tree traversal and ancestry resolution. |
+| Service                  | Responsibility                                                                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| AccountBalanceService    | Projects Transactions to derive the current balance of an Account. Balance is never persisted independently.                    |
+| TransactionFactory       | Constructs valid Transactions and their movements based on transaction type. Ensures structural correctness before persistence. |
+| TransactionReversal      | Creates a compensating Transaction to reverse a previously recorded one. Preserves the immutability of the original.            |
+| CategoryHierarchyService | Validates that category relationships do not introduce cycles. Provides tree traversal and ancestry resolution.                 |
 
 ---
 
 ### Domain Events
 
-| Event | Trigger |
-|---|---|
-| AccountCreated | A new account was registered. |
-| AccountArchived | An account was archived. |
-| AccountReopened | An archived account was reactivated. |
-| IncomeRegistered | An income transaction was recorded. |
-| ExpenseRegistered | An expense transaction was recorded. |
-| TransferCompleted | A transfer between accounts was completed. |
-| AdjustmentRecorded | A balance adjustment was recorded. |
+| Event               | Trigger                                                                        |
+| ------------------- | ------------------------------------------------------------------------------ |
+| AccountCreated      | A new account was registered.                                                  |
+| AccountArchived     | An account was archived.                                                       |
+| AccountReopened     | An archived account was reactivated.                                           |
+| IncomeRegistered    | An income transaction was recorded.                                            |
+| ExpenseRegistered   | An expense transaction was recorded.                                           |
+| TransferCompleted   | A transfer between accounts was completed.                                     |
+| AdjustmentRecorded  | A balance adjustment was recorded.                                             |
 | TransactionReversed | A previously recorded transaction was reversed via a compensating transaction. |
-| CategoryCreated | A new category was created. |
-| CategoryArchived | A category was archived. |
-| TagCreated | A new tag was created. |
-| TagArchived | A tag was archived. |
-| MerchantRegistered | A new merchant was added to the registry. |
+| CategoryCreated     | A new category was created.                                                    |
+| CategoryArchived    | A category was archived.                                                       |
+| TagCreated          | A new tag was created.                                                         |
+| TagArchived         | A tag was archived.                                                            |
+| MerchantRegistered  | A new merchant was added to the registry.                                      |
 
 ---
 
 ### Context Relationships
 
-| Related Context | Direction | Mechanism |
-|---|---|---|
-| Portfolio | Upstream publisher | Portfolio subscribes to ExpenseRegistered and TransferCompleted to update credit card, loan, and liability balances. |
-| Planning | Upstream publisher | Planning subscribes to IncomeRegistered and ExpenseRegistered to track budget and goal progress. |
-| Insights | Upstream publisher | Insights consumes Finance data through Read Models. It never accesses transactional aggregates directly. |
+| Related Context | Direction          | Mechanism                                                                                                            |
+| --------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| Portfolio       | Upstream publisher | Portfolio subscribes to ExpenseRegistered and TransferCompleted to update credit card, loan, and liability balances. |
+| Planning        | Upstream publisher | Planning subscribes to IncomeRegistered and ExpenseRegistered to track budget and goal progress.                     |
+| Insights        | Upstream publisher | Insights consumes Finance data through Read Models. It never accesses transactional aggregates directly.             |
 
 ---
 
@@ -425,28 +425,28 @@ Planning observes the financial domain to measure progress. It never modifies fi
 
 ### Aggregates
 
-#### Budget *(Aggregate Root)*
+#### Budget _(Aggregate Root)_
 
 Represents a spending limit for a defined period and scope. Progress is derived from Finance and never stored independently.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| Budget | Aggregate root. Defines a spending plan for a period. |
+| Entity       | Role                                                                          |
+| ------------ | ----------------------------------------------------------------------------- |
+| Budget       | Aggregate root. Defines a spending plan for a period.                         |
 | BudgetTarget | A spending limit scoped to a category, a category group, or overall spending. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| BudgetId | Unique identity of the budget. |
-| BudgetPeriod | Time range: start date, end date, and recurrence type. |
-| BudgetPeriodType | Enumeration: Weekly, Monthly, Quarterly, Yearly. |
-| BudgetAmount | Maximum spending allowed within the scope. |
-| BudgetScope | What the target applies to: a category, a category group, or overall spending. |
-| BudgetStatus | Enumeration: Active, Closed. |
-| BudgetProgress | Derived: spending expressed as a percentage of the budget amount. Never persisted. |
+| Value Object     | Description                                                                        |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| BudgetId         | Unique identity of the budget.                                                     |
+| BudgetPeriod     | Time range: start date, end date, and recurrence type.                             |
+| BudgetPeriodType | Enumeration: Weekly, Monthly, Quarterly, Yearly.                                   |
+| BudgetAmount     | Maximum spending allowed within the scope.                                         |
+| BudgetScope      | What the target applies to: a category, a category group, or overall spending.     |
+| BudgetStatus     | Enumeration: Active, Closed.                                                       |
+| BudgetProgress   | Derived: spending expressed as a percentage of the budget amount. Never persisted. |
 
 **Invariants**
 
@@ -456,28 +456,28 @@ Represents a spending limit for a defined period and scope. Progress is derived 
 
 ---
 
-#### Goal *(Aggregate Root)*
+#### Goal _(Aggregate Root)_
 
 Represents a long-term financial objective with a target amount and an optional deadline. Progress is derived from financial data and never stored independently.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| Goal | Aggregate root. Represents a long-term financial objective. |
+| Entity        | Role                                                                                          |
+| ------------- | --------------------------------------------------------------------------------------------- |
+| Goal          | Aggregate root. Represents a long-term financial objective.                                   |
 | GoalMilestone | An intermediate checkpoint. Reached automatically when progress crosses the milestone amount. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| GoalId | Unique identity of the goal. |
-| GoalType | Examples: Emergency Fund, Vacation, Home Purchase, Debt Payoff, Retirement. |
-| GoalAmount | Target monetary value. |
-| GoalProgress | Derived: current amount relative to the target. Never persisted. |
-| GoalDeadline | Optional target date. |
-| GoalStatus | Enumeration: Active, Completed, Abandoned. |
-| MilestoneAmount | Threshold at which a GoalMilestone is considered reached. |
+| Value Object    | Description                                                                 |
+| --------------- | --------------------------------------------------------------------------- |
+| GoalId          | Unique identity of the goal.                                                |
+| GoalType        | Examples: Emergency Fund, Vacation, Home Purchase, Debt Payoff, Retirement. |
+| GoalAmount      | Target monetary value.                                                      |
+| GoalProgress    | Derived: current amount relative to the target. Never persisted.            |
+| GoalDeadline    | Optional target date.                                                       |
+| GoalStatus      | Enumeration: Active, Completed, Abandoned.                                  |
+| MilestoneAmount | Threshold at which a GoalMilestone is considered reached.                   |
 
 **Invariants**
 
@@ -487,25 +487,25 @@ Represents a long-term financial objective with a target amount and an optional 
 
 ---
 
-#### CashFlowPlan *(Aggregate Root)*
+#### CashFlowPlan _(Aggregate Root)_
 
 Represents a forward-looking projection of expected income and expenses for a defined future period. Used for planning — not for recording historical facts.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity       | Role                                                               |
+| ------------ | ------------------------------------------------------------------ |
 | CashFlowPlan | Aggregate root. Defines a projected cash flow for a future period. |
-| PlannedEntry | A single expected income or expense item within the plan. |
+| PlannedEntry | A single expected income or expense item within the plan.          |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| CashFlowPlanId | Unique identity of the plan. |
-| PlanPeriod | The future time range covered by the plan. |
-| PlannedAmount | The expected monetary amount for a planned entry. |
-| PlannedEntryType | Enumeration: PlannedIncome, PlannedExpense. |
+| Value Object     | Description                                                               |
+| ---------------- | ------------------------------------------------------------------------- |
+| CashFlowPlanId   | Unique identity of the plan.                                              |
+| PlanPeriod       | The future time range covered by the plan.                                |
+| PlannedAmount    | The expected monetary amount for a planned entry.                         |
+| PlannedEntryType | Enumeration: PlannedIncome, PlannedExpense.                               |
 | ProjectedBalance | Derived: expected net position at the end of the period. Never persisted. |
 
 **Invariants**
@@ -518,37 +518,37 @@ Represents a forward-looking projection of expected income and expenses for a de
 
 ### Domain Services
 
-| Service | Responsibility |
-|---|---|
-| BudgetProgressCalculator | Projects Transactions against BudgetTargets to derive spending progress for the current period. |
-| GoalProgressCalculator | Derives goal progress by projecting relevant Transactions, Portfolio balances, and account data. |
-| CashFlowProjector | Combines planned entries with current account balances to project the expected end-of-period financial position. |
+| Service                  | Responsibility                                                                                                   |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| BudgetProgressCalculator | Projects Transactions against BudgetTargets to derive spending progress for the current period.                  |
+| GoalProgressCalculator   | Derives goal progress by projecting relevant Transactions, Portfolio balances, and account data.                 |
+| CashFlowProjector        | Combines planned entries with current account balances to project the expected end-of-period financial position. |
 
 ---
 
 ### Domain Events
 
-| Event | Trigger |
-|---|---|
-| BudgetCreated | A new budget was defined. |
-| BudgetExceeded | Spending crossed the budget limit. |
-| BudgetCompleted | A budget period ended. |
-| GoalCreated | A new goal was defined. |
-| GoalMilestoneReached | Progress crossed a milestone amount. |
-| GoalCompleted | The goal's target amount was reached. |
-| GoalAbandoned | The user explicitly abandoned the goal. |
-| CashFlowPlanCreated | A new cash flow plan was defined. |
+| Event                | Trigger                                 |
+| -------------------- | --------------------------------------- |
+| BudgetCreated        | A new budget was defined.               |
+| BudgetExceeded       | Spending crossed the budget limit.      |
+| BudgetCompleted      | A budget period ended.                  |
+| GoalCreated          | A new goal was defined.                 |
+| GoalMilestoneReached | Progress crossed a milestone amount.    |
+| GoalCompleted        | The goal's target amount was reached.   |
+| GoalAbandoned        | The user explicitly abandoned the goal. |
+| CashFlowPlanCreated  | A new cash flow plan was defined.       |
 
 ---
 
 ### Context Relationships
 
-| Related Context | Direction | Mechanism |
-|---|---|---|
-| Finance | Downstream consumer | Subscribes to IncomeRegistered and ExpenseRegistered to recalculate budget and goal progress. |
-| Portfolio | Downstream consumer | Subscribes to LoanPaymentApplied, LiabilitySettled, and AssetValuationUpdated to recalculate goal progress. |
-| Administration | Upstream provider | Administration subscribes to BudgetExceeded, GoalMilestoneReached, and GoalCompleted to deliver notifications. |
-| Insights | Upstream provider | Insights reads Planning data through public query services. |
+| Related Context | Direction           | Mechanism                                                                                                      |
+| --------------- | ------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Finance         | Downstream consumer | Subscribes to IncomeRegistered and ExpenseRegistered to recalculate budget and goal progress.                  |
+| Portfolio       | Downstream consumer | Subscribes to LoanPaymentApplied, LiabilitySettled, and AssetValuationUpdated to recalculate goal progress.    |
+| Administration  | Upstream provider   | Administration subscribes to BudgetExceeded, GoalMilestoneReached, and GoalCompleted to deliver notifications. |
+| Insights        | Upstream provider   | Insights reads Planning data through public query services.                                                    |
 
 ---
 
@@ -566,7 +566,7 @@ Portfolio is the authoritative source for net worth. It manages the instruments 
 - Liabilities
 - Credit Cards
 - Loans
-- Investments *(future)*
+- Investments _(future)_
 
 ### Key Boundary Note
 
@@ -574,28 +574,28 @@ The CreditCard instrument lives in Portfolio. The Transaction generated by a cre
 
 ### Aggregates
 
-#### Asset *(Aggregate Root)*
+#### Asset _(Aggregate Root)_
 
 Represents a physical or financial item of value owned by the user. Valuation history is preserved.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| Asset | Aggregate root. Represents an item of value owned by the user. |
+| Entity         | Role                                                                        |
+| -------------- | --------------------------------------------------------------------------- |
+| Asset          | Aggregate root. Represents an item of value owned by the user.              |
 | AssetValuation | A recorded valuation at a specific point in time. History is never deleted. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| AssetId | Unique identity of the asset. |
-| AssetType | Enumeration: Real Estate, Land, Vehicle, Machinery, Electronics, Jewelry, Other. |
-| AcquisitionPrice | Original purchase price at the time of acquisition. |
-| AcquisitionDate | Date the asset was acquired. |
-| AssetStatus | Enumeration: Active, Archived. |
-| AssetValue | Monetary value at a specific valuation date. |
-| ValuationDate | Date on which a valuation was recorded. |
+| Value Object     | Description                                                                      |
+| ---------------- | -------------------------------------------------------------------------------- |
+| AssetId          | Unique identity of the asset.                                                    |
+| AssetType        | Enumeration: Real Estate, Land, Vehicle, Machinery, Electronics, Jewelry, Other. |
+| AcquisitionPrice | Original purchase price at the time of acquisition.                              |
+| AcquisitionDate  | Date the asset was acquired.                                                     |
+| AssetStatus      | Enumeration: Active, Archived.                                                   |
+| AssetValue       | Monetary value at a specific valuation date.                                     |
+| ValuationDate    | Date on which a valuation was recorded.                                          |
 
 **Invariants**
 
@@ -605,25 +605,25 @@ Represents a physical or financial item of value owned by the user. Valuation hi
 
 ---
 
-#### Liability *(Aggregate Root)*
+#### Liability _(Aggregate Root)_
 
 Represents an informal financial obligation owed to an individual or non-institutional counterparty. Unlike Loans, Liabilities have no structured repayment schedule.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity    | Role                                                         |
+| --------- | ------------------------------------------------------------ |
 | Liability | Aggregate root. Represents an informal financial obligation. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| LiabilityId | Unique identity of the liability. |
-| LiabilityCounterparty | The person or entity to whom the money is owed. |
-| LiabilityAmount | Original obligation amount. |
-| OutstandingBalance | Derived: remaining amount owed. Never persisted independently. |
-| LiabilityStatus | Enumeration: Active, Settled. |
+| Value Object          | Description                                                    |
+| --------------------- | -------------------------------------------------------------- |
+| LiabilityId           | Unique identity of the liability.                              |
+| LiabilityCounterparty | The person or entity to whom the money is owed.                |
+| LiabilityAmount       | Original obligation amount.                                    |
+| OutstandingBalance    | Derived: remaining amount owed. Never persisted independently. |
+| LiabilityStatus       | Enumeration: Active, Settled.                                  |
 
 **Invariants**
 
@@ -634,7 +634,7 @@ Represents an informal financial obligation owed to an individual or non-institu
 
 ---
 
-#### CreditCard *(Aggregate Root)*
+#### CreditCard _(Aggregate Root)_
 
 Represents a revolving credit instrument. Manages billing cycles, statements, and available credit.
 
@@ -642,22 +642,22 @@ The CreditCard instrument is distinct from a Transaction. When a user makes a cr
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity     | Role                                                      |
+| ---------- | --------------------------------------------------------- |
 | CreditCard | Aggregate root. Represents a revolving credit instrument. |
-| Statement | Represents a billing period. Immutable once closed. |
+| Statement  | Represents a billing period. Immutable once closed.       |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| CreditCardId | Unique identity of the credit card. |
-| CreditLimit | Maximum authorized credit. |
+| Value Object    | Description                                                                                               |
+| --------------- | --------------------------------------------------------------------------------------------------------- |
+| CreditCardId    | Unique identity of the credit card.                                                                       |
+| CreditLimit     | Maximum authorized credit.                                                                                |
 | AvailableCredit | Derived: Credit Limit minus the outstanding balance on the open Statement. Never persisted independently. |
-| BillingCycle | Day of month when Statements close and when payments are due. |
-| StatementId | Unique identity of a Statement. |
-| StatementPeriod | Start and end dates of a Statement period. |
-| StatementStatus | Enumeration: Open, Closed. |
+| BillingCycle    | Day of month when Statements close and when payments are due.                                             |
+| StatementId     | Unique identity of a Statement.                                                                           |
+| StatementPeriod | Start and end dates of a Statement period.                                                                |
+| StatementStatus | Enumeration: Open, Closed.                                                                                |
 
 **Invariants**
 
@@ -668,28 +668,28 @@ The CreditCard instrument is distinct from a Transaction. When a user makes a cr
 
 ---
 
-#### Loan *(Aggregate Root)*
+#### Loan _(Aggregate Root)_
 
 Represents an installment-based debt instrument with a structured repayment schedule. Covers mortgages, auto loans, and personal loans.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| Loan | Aggregate root. Represents an installment-based debt. |
-| PaymentSchedule | The structured repayment plan for the loan. |
-| ScheduledPayment | A single expected payment within the schedule. |
+| Entity           | Role                                                  |
+| ---------------- | ----------------------------------------------------- |
+| Loan             | Aggregate root. Represents an installment-based debt. |
+| PaymentSchedule  | The structured repayment plan for the loan.           |
+| ScheduledPayment | A single expected payment within the schedule.        |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| LoanId | Unique identity of the loan. |
-| LoanType | Enumeration: Mortgage, Auto Loan, Personal Loan, Other. |
-| LoanAmount | Original principal at origination. |
+| Value Object       | Description                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| LoanId             | Unique identity of the loan.                                 |
+| LoanType           | Enumeration: Mortgage, Auto Loan, Personal Loan, Other.      |
+| LoanAmount         | Original principal at origination.                           |
 | OutstandingBalance | Derived: remaining principal. Never persisted independently. |
-| InterestRate | Annual percentage rate. |
-| LoanStatus | Enumeration: Active, Closed. |
+| InterestRate       | Annual percentage rate.                                      |
+| LoanStatus         | Enumeration: Active, Closed.                                 |
 
 **Invariants**
 
@@ -701,42 +701,42 @@ Represents an installment-based debt instrument with a structured repayment sche
 
 ### Domain Services
 
-| Service | Responsibility |
-|---|---|
-| NetWorthCalculator | Aggregates asset valuations, liability balances, loan balances, and credit card balances to compute the user's current net worth. |
-| AvailableCreditCalculator | Derives available credit from the credit limit and the open Statement balance. |
-| OutstandingBalanceCalculator | Derives current outstanding balances for Loans and Liabilities from original amounts and all recorded payments. |
-| AmortizationService | Generates a payment schedule from loan terms: principal, interest rate, and term length. |
-| StatementClosingService | Closes the current Statement and opens a new one at the end of a billing cycle. |
+| Service                      | Responsibility                                                                                                                    |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| NetWorthCalculator           | Aggregates asset valuations, liability balances, loan balances, and credit card balances to compute the user's current net worth. |
+| AvailableCreditCalculator    | Derives available credit from the credit limit and the open Statement balance.                                                    |
+| OutstandingBalanceCalculator | Derives current outstanding balances for Loans and Liabilities from original amounts and all recorded payments.                   |
+| AmortizationService          | Generates a payment schedule from loan terms: principal, interest rate, and term length.                                          |
+| StatementClosingService      | Closes the current Statement and opens a new one at the end of a billing cycle.                                                   |
 
 ---
 
 ### Domain Events
 
-| Event | Trigger |
-|---|---|
-| AssetCreated | A new asset was registered. |
-| AssetValuationUpdated | A new valuation was recorded for the asset. |
-| AssetArchived | An asset was archived. |
-| LiabilityRegistered | A new liability was created. |
-| LiabilityPaymentRecorded | A payment was applied to a liability. |
-| LiabilitySettled | A liability was fully paid and closed. |
-| CreditCardCreated | A new credit card was registered. |
-| StatementClosed | A billing cycle ended and the Statement was closed. |
-| CreditCardPaymentApplied | A payment was applied to a credit card. |
-| LoanCreated | A new loan was registered. |
-| LoanPaymentApplied | A payment was applied to a loan. |
-| LoanClosed | A loan was fully repaid or explicitly closed. |
+| Event                    | Trigger                                             |
+| ------------------------ | --------------------------------------------------- |
+| AssetCreated             | A new asset was registered.                         |
+| AssetValuationUpdated    | A new valuation was recorded for the asset.         |
+| AssetArchived            | An asset was archived.                              |
+| LiabilityRegistered      | A new liability was created.                        |
+| LiabilityPaymentRecorded | A payment was applied to a liability.               |
+| LiabilitySettled         | A liability was fully paid and closed.              |
+| CreditCardCreated        | A new credit card was registered.                   |
+| StatementClosed          | A billing cycle ended and the Statement was closed. |
+| CreditCardPaymentApplied | A payment was applied to a credit card.             |
+| LoanCreated              | A new loan was registered.                          |
+| LoanPaymentApplied       | A payment was applied to a loan.                    |
+| LoanClosed               | A loan was fully repaid or explicitly closed.       |
 
 ---
 
 ### Context Relationships
 
-| Related Context | Direction | Mechanism |
-|---|---|---|
-| Finance | Downstream consumer | Subscribes to ExpenseRegistered and TransferCompleted to apply payments to credit cards, loans, and liabilities. |
-| Planning | Upstream provider | Planning subscribes to Portfolio events to recalculate goal progress. |
-| Insights | Upstream provider | Insights reads Portfolio data through Read Models and public query services. |
+| Related Context | Direction           | Mechanism                                                                                                        |
+| --------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Finance         | Downstream consumer | Subscribes to ExpenseRegistered and TransferCompleted to apply payments to credit cards, loans, and liabilities. |
+| Planning        | Upstream provider   | Planning subscribes to Portfolio events to recalculate goal progress.                                            |
+| Insights        | Upstream provider   | Insights reads Portfolio data through Read Models and public query services.                                     |
 
 ---
 
@@ -755,44 +755,44 @@ Insights has no financial state of its own. It reads from all other business con
 
 ### Aggregates
 
-#### Dashboard *(Aggregate Root)*
+#### Dashboard _(Aggregate Root)_
 
 Represents the user's real-time financial overview, composed of KPIs derived from the domain.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity    | Role                                                                |
+| --------- | ------------------------------------------------------------------- |
 | Dashboard | Aggregate root. Represents the user's top-level financial overview. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| DashboardId | Unique identity of the dashboard. |
-| KPI | A calculated financial metric: Net Worth, Monthly Cash Flow, Total Debt, Budget Status, etc. |
+| Value Object | Description                                                                                  |
+| ------------ | -------------------------------------------------------------------------------------------- |
+| DashboardId  | Unique identity of the dashboard.                                                            |
+| KPI          | A calculated financial metric: Net Worth, Monthly Cash Flow, Total Debt, Budget Status, etc. |
 
 ---
 
-#### Report *(Aggregate Root)*
+#### Report _(Aggregate Root)_
 
 Defines a financial report and retains previously generated versions for reproducibility.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| Report | Aggregate root. Defines the parameters of a financial report. |
-| SavedReport | A previously generated report. Immutable once saved. |
+| Entity      | Role                                                          |
+| ----------- | ------------------------------------------------------------- |
+| Report      | Aggregate root. Defines the parameters of a financial report. |
+| SavedReport | A previously generated report. Immutable once saved.          |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| ReportId | Unique identity of the report. |
-| ReportType | Enumeration: Cash Flow, Income vs Expenses, Spending by Category, Net Worth, Budget Performance, Debt Evolution, Monthly Summary, Annual Summary. |
-| DateRange | Time range covered by the report. Defined in the Shared Kernel. |
-| ReadModel | A pre-built projection of domain data consumed by the report. Immutable once created. |
+| Value Object | Description                                                                                                                                       |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ReportId     | Unique identity of the report.                                                                                                                    |
+| ReportType   | Enumeration: Cash Flow, Income vs Expenses, Spending by Category, Net Worth, Budget Performance, Debt Evolution, Monthly Summary, Annual Summary. |
+| DateRange    | Time range covered by the report. Defined in the Shared Kernel.                                                                                   |
+| ReadModel    | A pre-built projection of domain data consumed by the report. Immutable once created.                                                             |
 
 **Invariants**
 
@@ -803,63 +803,63 @@ Defines a financial report and retains previously generated versions for reprodu
 
 ---
 
-#### AIConversation *(Aggregate Root)*
+#### AIConversation _(Aggregate Root)_
 
 Represents a natural language session between the user and the AI assistant.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
-| AIConversation | Aggregate root. Represents a conversational session. |
-| AIMessage | A single message within a conversation, from either the user or the AI. |
+| Entity         | Role                                                                    |
+| -------------- | ----------------------------------------------------------------------- |
+| AIConversation | Aggregate root. Represents a conversational session.                    |
+| AIMessage      | A single message within a conversation, from either the user or the AI. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| ConversationId | Unique identity of the conversation. |
+| Value Object   | Description                                                  |
+| -------------- | ------------------------------------------------------------ |
+| ConversationId | Unique identity of the conversation.                         |
 | PromptTemplate | A reusable query structure for specific financial scenarios. |
-| AIFeedback | User-provided feedback on an AI response. |
+| AIFeedback     | User-provided feedback on an AI response.                    |
 
 ---
 
-#### AIRecommendation *(Aggregate Root)*
+#### AIRecommendation _(Aggregate Root)_
 
 A specific actionable suggestion generated by AI. Requires explicit user approval before being applied to the domain.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity           | Role                                                                    |
+| ---------------- | ----------------------------------------------------------------------- |
 | AIRecommendation | Aggregate root. Represents a pending suggestion awaiting user decision. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| RecommendationId | Unique identity of the recommendation. |
-| RecommendationStatus | Enumeration: Pending, Accepted, Rejected. |
+| Value Object              | Description                                                              |
+| ------------------------- | ------------------------------------------------------------------------ |
+| RecommendationId          | Unique identity of the recommendation.                                   |
+| RecommendationStatus      | Enumeration: Pending, Accepted, Rejected.                                |
 | RecommendationExplanation | The reason behind the suggestion. Every recommendation must include one. |
 
 ---
 
-#### AIInsight *(Aggregate Root)*
+#### AIInsight _(Aggregate Root)_
 
 An AI-generated observation about the user's financial patterns or health. Generated proactively or on demand.
 
 **Entities**
 
-| Entity | Role |
-|---|---|
+| Entity    | Role                                                              |
+| --------- | ----------------------------------------------------------------- |
 | AIInsight | Aggregate root. Represents an AI-generated financial observation. |
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| InsightId | Unique identity of the insight. |
-| InsightType | Examples: Spending Pattern, Unusual Activity, Budget Risk, Goal Risk. |
+| Value Object | Description                                                           |
+| ------------ | --------------------------------------------------------------------- |
+| InsightId    | Unique identity of the insight.                                       |
+| InsightType  | Examples: Spending Pattern, Unusual Activity, Budget Risk, Goal Risk. |
 
 **Invariants (across the AI sub-domain)**
 
@@ -872,39 +872,39 @@ An AI-generated observation about the user's financial patterns or health. Gener
 
 ### Domain Services
 
-| Service | Responsibility |
-|---|---|
-| ReadModelProjector | Builds and refreshes Read Models from domain data. May execute synchronously or asynchronously depending on performance requirements. |
-| ReportGenerator | Produces a report from a Report definition and the corresponding Read Models. |
-| AIQueryService | Reads domain data through Read Models and public query services. Never accesses transactional aggregates directly. |
-| RecommendationApplicationService | Applies an accepted AIRecommendation to the target context through its public capabilities. Requires prior explicit user approval. |
+| Service                          | Responsibility                                                                                                                        |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| ReadModelProjector               | Builds and refreshes Read Models from domain data. May execute synchronously or asynchronously depending on performance requirements. |
+| ReportGenerator                  | Produces a report from a Report definition and the corresponding Read Models.                                                         |
+| AIQueryService                   | Reads domain data through Read Models and public query services. Never accesses transactional aggregates directly.                    |
+| RecommendationApplicationService | Applies an accepted AIRecommendation to the target context through its public capabilities. Requires prior explicit user approval.    |
 
 ---
 
 ### Domain Events
 
-| Event | Trigger |
-|---|---|
-| ReportGenerated | A report was successfully generated. |
-| DashboardUpdated | Dashboard data was refreshed. |
+| Event                   | Trigger                              |
+| ----------------------- | ------------------------------------ |
+| ReportGenerated         | A report was successfully generated. |
+| DashboardUpdated        | Dashboard data was refreshed.        |
 | RecommendationGenerated | A new AI recommendation was created. |
-| RecommendationAccepted | The user accepted a recommendation. |
-| RecommendationRejected | The user rejected a recommendation. |
-| InsightGenerated | A new AI insight was generated. |
+| RecommendationAccepted  | The user accepted a recommendation.  |
+| RecommendationRejected  | The user rejected a recommendation.  |
+| InsightGenerated        | A new AI insight was generated.      |
 
 ---
 
 ### Context Relationships
 
-| Related Context | Direction | Mechanism |
-|---|---|---|
-| Finance | Downstream consumer | Reads Finance data through Read Models. Never queries transactional aggregates directly. |
-| Portfolio | Downstream consumer | Reads Portfolio data through Read Models and public query services. |
-| Planning | Downstream consumer | Reads Planning data through public query services. |
+| Related Context | Direction           | Mechanism                                                                                |
+| --------------- | ------------------- | ---------------------------------------------------------------------------------------- |
+| Finance         | Downstream consumer | Reads Finance data through Read Models. Never queries transactional aggregates directly. |
+| Portfolio       | Downstream consumer | Reads Portfolio data through Read Models and public query services.                      |
+| Planning        | Downstream consumer | Reads Planning data through public query services.                                       |
 
 ---
 
-## 4.6 Integrations *(Future)*
+## 4.6 Integrations _(Future)_
 
 ### Purpose
 
@@ -921,11 +921,11 @@ This context establishes the boundary for all external integration capabilities.
 
 ### Preliminary Aggregates
 
-| Aggregate | Role |
-|---|---|
-| ConnectedInstitution | Represents a linked external financial institution. |
-| ImportJob | Represents an in-progress or completed data import operation. |
-| ExportJob | Represents a data export operation. |
+| Aggregate             | Role                                                                      |
+| --------------------- | ------------------------------------------------------------------------- |
+| ConnectedInstitution  | Represents a linked external financial institution.                       |
+| ImportJob             | Represents an in-progress or completed data import operation.             |
+| ExportJob             | Represents a data export operation.                                       |
 | SynchronizationRecord | Captures the result of a synchronization cycle with an external provider. |
 
 ### Invariants
@@ -955,67 +955,67 @@ Administration is a generic supporting domain. It contains no business rules and
 
 ### Aggregates
 
-#### Notification *(Aggregate Root)*
+#### Notification _(Aggregate Root)_
 
 Represents a message delivered to the user in response to a business event.
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| NotificationId | Unique identity of the notification. |
-| NotificationType | What triggered it: BudgetExceeded, GoalReached, PaymentDue, etc. |
-| NotificationChannel | Enumeration: In-App, Email. |
-| NotificationStatus | Enumeration: Pending, Sent, Failed. |
+| Value Object        | Description                                                      |
+| ------------------- | ---------------------------------------------------------------- |
+| NotificationId      | Unique identity of the notification.                             |
+| NotificationType    | What triggered it: BudgetExceeded, GoalReached, PaymentDue, etc. |
+| NotificationChannel | Enumeration: In-App, Email.                                      |
+| NotificationStatus  | Enumeration: Pending, Sent, Failed.                              |
 
 ---
 
-#### AuditLog *(Aggregate Root)*
+#### AuditLog _(Aggregate Root)_
 
 Represents an immutable record of a significant platform event. Append-only.
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| AuditLogId | Unique identity of the audit record. |
-| AuditAction | The operation that occurred. |
-| AuditActor | The user who performed the action. |
-| AuditTimestamp | When the action occurred. |
+| Value Object   | Description                          |
+| -------------- | ------------------------------------ |
+| AuditLogId     | Unique identity of the audit record. |
+| AuditAction    | The operation that occurred.         |
+| AuditActor     | The user who performed the action.   |
+| AuditTimestamp | When the action occurred.            |
 
 ---
 
-#### FeatureFlag *(Aggregate Root)*
+#### FeatureFlag _(Aggregate Root)_
 
 Controls the availability of a feature for a specific user or cohort.
 
 **Value Objects**
 
-| Value Object | Description |
-|---|---|
-| FlagKey | Unique identifier for the flag. |
-| FlagStatus | Enumeration: Enabled, Disabled. |
+| Value Object      | Description                                      |
+| ----------------- | ------------------------------------------------ |
+| FlagKey           | Unique identifier for the flag.                  |
+| FlagStatus        | Enumeration: Enabled, Disabled.                  |
 | RolloutPercentage | Percentage of users for whom the flag is active. |
 
 ---
 
 ### Domain Events
 
-| Event | Trigger |
-|---|---|
-| NotificationSent | A notification was delivered to the user. |
+| Event              | Trigger                                             |
+| ------------------ | --------------------------------------------------- |
+| NotificationSent   | A notification was delivered to the user.           |
 | AuditEventRecorded | A significant action was recorded in the audit log. |
-| FeatureFlagUpdated | A feature flag was changed. |
+| FeatureFlagUpdated | A feature flag was changed.                         |
 
 ---
 
 ### Context Relationships
 
-| Related Context | Direction | Mechanism |
-|---|---|---|
-| Planning | Downstream consumer | Subscribes to BudgetExceeded, GoalMilestoneReached, and GoalCompleted to trigger user notifications. |
-| Portfolio | Downstream consumer | Subscribes to LoanClosed, LiabilitySettled, and StatementClosed to trigger user notifications. |
-| All contexts | Downstream consumer | Any context may publish audit-relevant events consumed by the Audit sub-domain. |
+| Related Context | Direction           | Mechanism                                                                                            |
+| --------------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
+| Planning        | Downstream consumer | Subscribes to BudgetExceeded, GoalMilestoneReached, and GoalCompleted to trigger user notifications. |
+| Portfolio       | Downstream consumer | Subscribes to LoanClosed, LiabilitySettled, and StatementClosed to trigger user notifications.       |
+| All contexts    | Downstream consumer | Any context may publish audit-relevant events consumed by the Audit sub-domain.                      |
 
 ---
 
