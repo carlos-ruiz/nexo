@@ -2,12 +2,26 @@
 title: Product Vision
 status: Approved
 version: 1.0.0
+
 owner: Carlos Ruiz
-reviewers:
+
+authors:
+  - Carlos Ruiz
   - ChatGPT (Principal Software Architect)
+
 last_updated: 2026-07-02
-related:
-  - PRODUCT.md
+
+depends_on: []
+
+related: []
+
+supersedes: null
+
+superseded_by: null
+
+tags:
+  - product
+  - vision
 ---
 
 # Product Vision
@@ -75,78 +89,7 @@ If a feature does not help answer meaningful financial questions, it should not 
 
 ---
 
-# 5. Product Principles
-
-## 5.1 Decision-Oriented
-
-Nexo is designed to support decisions, not data entry.
-
-Transaction recording exists only because it enables meaningful analysis.
-
----
-
-## 5.2 Trust Above Everything
-
-Financial software must always prioritize correctness over convenience.
-
-Incorrect data destroys trust.
-
-Every design decision should favor accuracy.
-
----
-
-## 5.3 Simplicity Through Design
-
-Complex financial concepts should feel simple.
-
-The product should reduce cognitive load rather than increase it.
-
-Advanced capabilities should never overwhelm new users.
-
----
-
-## 5.4 AI as a Core Capability
-
-Artificial Intelligence is not an optional feature.
-
-It is a foundational capability integrated across the entire platform.
-
-Examples include:
-
-- Automatic categorization
-- OCR
-- PDF import
-- Financial insights
-- Spending predictions
-- Budget recommendations
-- Financial simulations
-- Natural language queries
-
-AI should always augment user decisions, never replace them.
-
----
-
-## 5.5 User Ownership
-
-Users own their financial data.
-
-Nexo must remain transparent about how data is processed.
-
-The system should never require bank connectivity to provide value.
-
-Manual data entry remains a first-class workflow.
-
----
-
-## 5.6 Modular Growth
-
-Every capability should be independently evolvable.
-
-Today's architecture should allow adding future modules without requiring large-scale rewrites.
-
----
-
-# 6. Core Values
+# 5. Core Values
 
 - Accuracy
 - Transparency
@@ -160,7 +103,7 @@ Today's architecture should allow adding future modules without requiring large-
 
 ---
 
-# 7. Target Audience
+# 6. Target Audience
 
 Initially, Nexo targets individuals and families who want complete control over their finances.
 
@@ -178,7 +121,7 @@ Future versions may support financial advisors and accountants, but they are out
 
 ---
 
-# 8. Product Scope
+# 7. Product Scope
 
 Nexo focuses exclusively on personal finance.
 
@@ -202,7 +145,7 @@ Supported domains include:
 
 ---
 
-# 9. Explicit Non-Goals
+# 8. Explicit Non-Goals
 
 The following are intentionally outside the current product scope:
 
@@ -220,7 +163,7 @@ Keeping the scope focused is critical for long-term product quality.
 
 ---
 
-# 10. Success Metrics
+# 9. Success Metrics
 
 Nexo succeeds when users can confidently answer questions such as:
 
@@ -236,7 +179,7 @@ Success is measured by financial clarity rather than feature count.
 
 ---
 
-# 11. Guiding Questions
+# 10. Guiding Questions
 
 Every new feature must answer "yes" to at least one of the following:
 
@@ -251,7 +194,7 @@ If none apply, the feature should not be implemented.
 
 ---
 
-# 12. Localization Strategy
+# 11. Localization Strategy
 
 Nexo is English-first from an engineering perspective.
 
@@ -284,7 +227,7 @@ Localization must never be coupled to financial logic.
 
 ---
 
-# 13. Financial Philosophy
+# 12. Financial Philosophy
 
 Nexo tracks reality.
 
@@ -298,7 +241,7 @@ Trust is earned through consistency.
 
 ---
 
-# 14. Future Vision
+# 13. Future Vision
 
 The long-term objective is for users to interact with Nexo conversationally.
 
@@ -323,3 +266,25 @@ Nexo is not designed to become the application with the most features.
 It is designed to become the application users trust the most when making financial decisions.
 
 Every architectural decision, every line of code, and every future feature should reinforce that goal.
+
+---
+
+# Document Status
+
+**Status**
+
+Approved
+
+**Version**
+
+1.0.0
+
+**Next Document**
+
+`principles.md`
+
+**Notes**
+
+This document defines the long-term vision of Nexo.
+
+Changes to this document are expected to be rare and should require an ADR because they may impact the entire product strategy.
