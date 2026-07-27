@@ -36,6 +36,10 @@
 
 <!-- Why is this needed? What problem does it solve or what decision does it implement? -->
 
+## Jira Ticket
+
+<!-- https://cruiz.atlassian.net/browse/NEXO-1 -->
+
 ---
 
 ## Testing
@@ -57,6 +61,7 @@
 ## Checklist
 
 - [ ] Commits follow [Conventional Commits](https://www.conventionalcommits.org/) (`type(scope): description`)
+- [ ] Jira ticket is linked (for example `NEX-123`) in this PR description
 - [ ] Unit tests cover all new or changed domain invariants
 - [ ] Integration tests use a real PostgreSQL database — no mocked repositories
 - [ ] No module queries another module's database tables directly
