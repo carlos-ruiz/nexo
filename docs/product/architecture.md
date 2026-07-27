@@ -9,7 +9,7 @@ authors:
   - Carlos Ruiz
   - Claude (Principal Software Architect)
 
-last_updated: 2026-07-11
+last_updated: 2026-07-26
 
 depends_on:
   - vision.md
@@ -584,6 +584,100 @@ Testing is organized into three levels with distinct purposes.
 ---
 
 # 9. Engineering Standards
+
+---
+
+## Coding Principles
+
+The following principles apply to all code written in Nexo, at every layer.
+
+They are not suggestions. Violations must be corrected before a pull request is merged.
+
+---
+
+### SOLID
+
+**Single Responsibility**
+
+Every class, module, and function has exactly one reason to change.
+
+Aggregate roots are responsible for enforcing their own invariants — nothing else.
+Command handlers execute one use case — nothing else.
+Repository interfaces expose only the operations their aggregate requires — nothing else.
+
+When a class starts doing two things, split it.
+
+---
+
+**Open / Closed**
+
+Modules are open for extension and closed for modification.
+
+New behavior is added by introducing new commands, queries, event handlers, or domain services — not by modifying existing ones.
+Public application service contracts are stable once established. Breaking changes require a new service method, not a modification to an existing signature.
+
+---
+
+**Liskov Substitution**
+
+Every implementation of an interface must be substitutable for that interface without altering the correctness of the program.
+
+Repository implementations in the Infrastructure Layer must be interchangeable with the repository interfaces defined in the Domain Layer.
+Fake repository implementations used in tests must behave identically to real ones for the operations they implement.
+
+---
+
+**Interface Segregation**
+
+Interfaces are narrow and focused. No interface forces its implementors to depend on methods they do not use.
+
+Port interfaces in the Domain Layer expose only the operations a specific aggregate or service requires.
+A single large repository interface covering multiple aggregates is a violation of this principle.
+
+---
+
+**Dependency Inversion**
+
+High-level modules do not depend on low-level modules. Both depend on abstractions.
+
+The Application Layer depends on interfaces defined in the Domain Layer — never on Prisma types, external SDKs, or infrastructure implementations directly.
+Dependencies are injected, not instantiated. Infrastructure implementations are wired at the composition root.
+
+---
+
+### DRY — Don't Repeat Yourself
+
+Every piece of knowledge has a single, authoritative representation in the codebase.
+
+Business rules live in exactly one place: the Domain Layer. They are never duplicated in command handlers, API routes, UI components, or database constraints.
+
+If two places in the code enforce the same rule, one of them is wrong.
+
+Mapping code in repositories (translating between domain aggregates and Prisma models) is the one accepted form of structural repetition. It serves an explicit architectural boundary and is not a violation of this principle.
+
+---
+
+### KISS — Keep It Simple
+
+Prefer the simplest implementation that correctly models the domain and satisfies the requirement.
+
+Avoid clever abstractions, premature generalization, and unnecessary indirection. If an implementation requires a comment to explain what it does, rewrite it until it does not.
+
+Complexity is only introduced when it solves a concrete, present problem. Complexity introduced speculatively is technical debt from day one.
+
+This principle applies especially to the Domain Layer, where clarity and correctness matter more than performance.
+
+---
+
+### YAGNI — You Aren't Gonna Need It
+
+Do not build features, abstractions, or generalizations for hypothetical future requirements.
+
+Build what the current use case requires. When a second concrete use case appears, generalize then — not before.
+
+This principle applies with particular force to the Shared Kernel. Nothing is added to `src/shared-kernel/` speculatively. A primitive is added only when at least two modules demonstrably need it.
+
+ADRs document the reasoning when a decision feels like it might violate YAGNI. If the reasoning cannot be written down clearly, the feature is not needed yet.
 
 ---
 
