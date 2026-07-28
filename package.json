@@ -3,13 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.17.1",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
+    "prebuild": "pnpm prisma:generate",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
     "test": "node --test",
-    "prepare": "husky"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
