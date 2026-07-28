@@ -10,6 +10,7 @@
     "dev": "next dev",
     "prebuild": "pnpm prisma:generate",
     "build": "next build",
+    "ci:check": "pnpm prisma:generate && pnpm typecheck && pnpm lint && pnpm build",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint . --fix",

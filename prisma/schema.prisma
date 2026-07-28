@@ -2,6 +2,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Scaffold-only schema.
+// Add first domain model(s) in a follow-up PR, then run:
+// pnpm prisma:migrate:dev --name init
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

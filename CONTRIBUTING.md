@@ -36,3 +36,4 @@ This repository uses pnpm as the single package manager.
 - Keep pnpm-lock.yaml committed and up to date.
 - CI uses pnpm with frozen lockfile to guarantee reproducible installs.
 - `package-lock.json` is intentionally not used in this repository.
+- `pnpm-workspace.yaml` is currently used to control approved dependency build scripts via `onlyBuiltDependencies`.

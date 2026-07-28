@@ -14,10 +14,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify no npm lockfile
+        run: test ! -f package-lock.json
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 10.17.1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
