@@ -6,8 +6,10 @@ This repository uses pnpm as the single package manager.
 
 ## Runtime Requirements
 
-- Node.js 20 or newer
+- Node.js 24.x
 - pnpm 10.x
+
+For version policy and enforcement details, see [README.md](README.md) under Node.js Version Policy.
 
 ## Environment Setup
 
