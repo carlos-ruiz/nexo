@@ -6,18 +6,19 @@ This document defines how to create branches and write commits in Nexo.
 
 Nexo uses **GitHub Flow**.
 
-### Main branch
+### Permanent branches
 
-- `main` must always be deployable.
+- `main` is the only permanent branch and is always in a deployable state.
+- Every merge to `main` triggers an automatic deployment.
+- Production releases are handled by pushing a version tag (e.g. `v1.2.0`) — see the Release section below.
 - Never commit directly to `main`.
-- All changes reach `main` through Pull Requests.
 
 ### Branch lifecycle
 
 1. Sync your local `main` with remote.
 2. Create a short-lived branch from `main`.
 3. Implement one focused change.
-4. Open a Pull Request.
+4. Open a Pull Request targeting `main`.
 5. Merge only after review and passing CI.
 6. Delete the branch after merge.
 
@@ -181,7 +182,21 @@ git checkout -b feat/add-goal-rollover-rule
 git add .
 git commit -m "feat(planning): add monthly goal rollover rule"
 git push -u origin feat/add-goal-rollover-rule
+# open PR targeting main
 ```
+
+## Releases
+
+Production releases are triggered by pushing a version tag. CI handles the rest.
+
+```bash
+git tag v1.2.0
+git push origin v1.2.0
+```
+
+- Tags follow [Semantic Versioning](https://semver.org/): `vMAJOR.MINOR.PATCH`
+- `feat` commits increment MINOR, `fix` commits increment PATCH, breaking changes increment MAJOR
+- A GitHub Release with auto-generated changelog is created automatically from the tag
 
 ## Relation to Existing Standards
 

@@ -716,6 +716,8 @@ Example: `feat(finance): add transaction reversal command`
 Nexo uses **GitHub Flow**.
 
 - `main` is the only permanent branch and is always in a deployable state.
+- Every merge to `main` triggers an automatic deployment.
+- Production releases are cut by pushing a version tag (e.g. `v1.2.0`).
 - All changes are developed on short-lived branches created from `main`.
 - Branches are merged to `main` via pull request after review and CI passage.
 - Branches are deleted after merge.
