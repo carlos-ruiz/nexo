@@ -20,6 +20,12 @@
     "test": "node --test",
     "prepare": "husky install"
   },
+  "eslintConfig": {
+    "$schema": "https://json.schemastore.org/eslintrc.json",
+    "extends": [
+      "next/core-web-vitals"
+    ]
+  },
   "dependencies": {
     "@prisma/client": "^6.12.0",
     "next": "16.2.12",
