@@ -7,8 +7,27 @@ on:
       - main
 
 jobs:
-  lint-build:
+  ci:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: nexo
+          POSTGRES_DB: nexo_test
+          # Trust-based auth — no password needed for ephemeral CI containers
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://nexo@localhost:5432/nexo_test
 
     steps:
       - name: Checkout
@@ -39,6 +58,12 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Integration tests
+        run: pnpm test:integration
 
       - name: Build
         run: pnpm build
