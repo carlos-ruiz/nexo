@@ -38,4 +38,6 @@ For version policy and enforcement details, see [README.md](README.md) under Nod
 - Keep pnpm-lock.yaml committed and up to date.
 - CI uses pnpm with frozen lockfile to guarantee reproducible installs.
 - `package-lock.json` is intentionally not used in this repository.
-- `pnpm-workspace.yaml` is currently used to control approved dependency build scripts via `onlyBuiltDependencies`.
+- `pnpm-workspace.yaml` serves two purposes:
+  - `onlyBuiltDependencies`: allowlist of packages permitted to run install scripts (e.g. `postinstall`). Any package not listed here will have its build scripts silently skipped by pnpm, preventing supply-chain attacks from arbitrary script execution during `pnpm install`.
+  - `overrides`: forces minimum safe versions for transitive dependencies that carry known CVEs, ensuring nested packages are patched even when their direct parents have not yet released an update.
