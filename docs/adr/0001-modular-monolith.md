@@ -63,7 +63,7 @@ The key insight is that module isolation does not require network boundaries to 
 
 **Easier**:
 
-- Local development: a single `npm run dev` starts the entire application.
+- Local development: a single `pnpm dev` starts the entire application.
 - Refactoring: module boundaries can be adjusted without re-deploying services.
 - Transactions: cross-module operations that require ACID guarantees can use a single database transaction.
 - Testing: integration tests run against a real local database without network mocking.
