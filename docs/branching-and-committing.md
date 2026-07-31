@@ -135,10 +135,22 @@ Keep the required Conventional Commits structure:
 
 Then include the Jira key in one of these places:
 
-- In the description: `feat(planning): NEX-123 add monthly rollover rule`
-- In the commit footer/body:
-  - `Refs: NEX-123`
-  - `Closes: NEX-123`
+- In the commit footer/body (recommended for this repository):
+  - `Refs: NEXO-123`
+  - `Closes: NEXO-123`
+
+Important for Jira linking:
+
+- Keep `type` and `scope` lowercase to satisfy Conventional Commits.
+- Keep the subject/description lowercase to satisfy commitlint `subject-case`.
+- Use Jira keys in uppercase (for example `NEXO-4`) in the commit footer/body.
+- Avoid lowercase Jira keys such as `nexo-4`, because some Jira integrations do not index them reliably.
+
+Recommended commit pattern in this repository:
+
+`docs(docs): update jira key formatting guidelines for conventional commits`
+
+`Refs: NEXO-4`
 
 ### What to avoid
 
