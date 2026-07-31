@@ -162,6 +162,22 @@ Invalid examples:
 - `feat(NEX-123): add monthly rollover rule`
 - `NEX-123(planning): add monthly rollover rule`
 
+## Branch Protection Rules
+
+The `main` branch is protected with the following GitHub repository ruleset (Settings → Rules → Rulesets):
+
+| Rule                                  | Value                                  |
+| ------------------------------------- | -------------------------------------- |
+| Require a pull request before merging | ✅                                     |
+| Required approvals                    | 1                                      |
+| Require status checks to pass         | ✅                                     |
+| Required status check                 | `ci` (from `.github/workflows/ci.yml`) |
+| Require branches to be up to date     | ✅                                     |
+| Block force pushes                    | ✅                                     |
+| Restrict deletions                    | ✅                                     |
+
+The `ci` status check maps to the job named `ci` in `.github/workflows/ci.yml`. A PR cannot be merged until that job completes successfully.
+
 ## Pull Request Template
 
 Use the default GitHub PR template in [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md).

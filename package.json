@@ -20,6 +20,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "test": "node --test",
+    "test:integration": "node --test",
     "prepare": "husky install"
   },
   "eslintConfig": {
