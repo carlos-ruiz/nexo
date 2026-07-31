@@ -5,6 +5,7 @@
 Nexo is an AI-native, multilingual personal finance SaaS platform. Its purpose is to help individuals and families make better financial decisions — not just record transactions. It targets a complete financial operating system covering accounts, transactions, credit cards, loans, assets, liabilities, budgets, goals, reports, and AI-powered insights.
 
 Full product documentation lives in `docs/product/`. Read in this order:
+
 - `docs/product/vision.md` — why Nexo exists
 - `docs/product/principles.md` — how every decision is evaluated
 - `docs/product/scope.md` — what is and is not in scope
@@ -41,15 +42,15 @@ Each module is internally structured into three layers: **Domain** (pure busines
 
 The codebase is organized into seven modules, one per Bounded Context. Every business concept belongs to exactly one module.
 
-| Module | Layer | Contains |
-|---|---|---|
-| `identity` | Platform Services | User, authentication (Clerk ACL), authorization, preferences |
-| `administration` | Platform Services | Notifications, audit log, feature flags, configuration, observability |
-| `integrations` | Platform Services | External institution connectors, import/export jobs _(future)_ |
-| `finance` | Core Financial Domain | Accounts, Transactions, Categories, Tags, Merchants |
-| `planning` | Core Financial Domain | Budgets, Goals, Cash Flow Plans |
-| `portfolio` | Core Financial Domain | Assets, Liabilities, Credit Cards, Loans |
-| `insights` | Business Capabilities | Reports, Dashboard, AI Conversations, Recommendations, Insights |
+| Module           | Layer                 | Contains                                                              |
+| ---------------- | --------------------- | --------------------------------------------------------------------- |
+| `identity`       | Platform Services     | User, authentication (Clerk ACL), authorization, preferences          |
+| `administration` | Platform Services     | Notifications, audit log, feature flags, configuration, observability |
+| `integrations`   | Platform Services     | External institution connectors, import/export jobs _(future)_        |
+| `finance`        | Core Financial Domain | Accounts, Transactions, Categories, Tags, Merchants                   |
+| `planning`       | Core Financial Domain | Budgets, Goals, Cash Flow Plans                                       |
+| `portfolio`      | Core Financial Domain | Assets, Liabilities, Credit Cards, Loans                              |
+| `insights`       | Business Capabilities | Reports, Dashboard, AI Conversations, Recommendations, Insights       |
 
 For the full list of aggregates, entities, and value objects owned by each module, see `docs/product/domain-model.md`.
 
@@ -60,23 +61,27 @@ For the full list of aggregates, entities, and value objects owned by each modul
 These rules must never be violated. If a feature would require breaking one, raise it explicitly.
 
 ### Financial History
+
 - Financial history is immutable. Transactions are never edited or deleted.
 - Corrections are represented as new Transactions, never by rewriting existing ones.
 - Transactions are append-only.
 
 ### AI Behavior
+
 - AI never modifies financial records automatically.
 - Every AI suggestion requires explicit user confirmation before being applied.
 - AI failures must never interrupt core business operations.
 - Every AI recommendation must be explainable.
 
 ### Module Ownership
+
 - Every business concept belongs to exactly one module.
 - No module may directly modify another module's state.
 - No module may access another module's database tables directly.
 - Shared ownership is forbidden.
 
 ### Financial Calculations
+
 - Account balances are derived from Transactions, never stored as independent values.
 - Budgets never modify financial records — they read from Transactions.
 - Goals never modify financial records — they read from existing financial information.
@@ -84,24 +89,29 @@ These rules must never be violated. If a feature would require breaking one, rai
 - Tags and Merchants never affect financial calculations.
 
 ### Accounts
+
 - Archived accounts cannot receive new Transactions.
 - Every account has exactly one base currency.
 
 ### Credit Cards
+
 - Available credit cannot exceed the credit limit.
 - Closed statements are immutable.
 - Purchases belong to exactly one statement.
 
 ### Loans
+
 - Outstanding balance cannot become negative.
 - Closed loans cannot receive payments.
 
 ### Liabilities
+
 - Outstanding balance cannot become negative.
 - Settled liabilities cannot receive new payments.
 - Liabilities are independent from the Portfolio Loans sub-domain.
 
 ### Categories and Tags
+
 - Tags are independent from categories.
 - System categories cannot be deleted.
 - Category hierarchy cannot contain cycles.
@@ -112,11 +122,13 @@ These rules must never be violated. If a feature would require breaking one, rai
 ## Dependency Rules
 
 ### Allowed
+
 - Core Financial Modules may use Platform Services.
 - Business Capabilities may consume Core Financial Modules.
 - Any module may use Platform Services.
 
 ### Forbidden
+
 - Core Financial Modules depending on Business Capabilities.
 - Circular dependencies between modules.
 - Direct cross-module database access.
@@ -155,23 +167,23 @@ The Shared Kernel must never contain business logic. It must never import from a
 
 ## Tech Stack
 
-| Concern | Technology | Decision |
-|---|---|---|
-| Framework | Next.js | **App Router** — not Pages Router |
-| Language | TypeScript | Strict mode enabled. No `any` in domain or application code |
-| Database | PostgreSQL | One database, ACID transactions, immutable financial history |
-| ORM | Prisma | Infrastructure layer only — never in domain or application code |
-| Authentication | Clerk | Anti-corruption layer in `identity` module. `UserId` is the only shared reference |
-| Styling | Tailwind CSS | |
-| UI Components | shadcn/ui | Components copied to `src/components/ui/` — no runtime dependency |
-| Internationalization | next-intl | Presentation layer only. Never in domain or application code |
-| Progressive Web App | PWA support | |
-| Linting | ESLint | Errors block CI |
-| Formatting | Prettier | Applied automatically on commit via Husky |
-| Git hooks | Husky | |
-| Unit + Integration tests | Vitest | |
-| End-to-end tests | Playwright | |
-| CI/CD | GitHub Actions | |
+| Concern                  | Technology     | Decision                                                                          |
+| ------------------------ | -------------- | --------------------------------------------------------------------------------- |
+| Framework                | Next.js        | **App Router** — not Pages Router                                                 |
+| Language                 | TypeScript     | Strict mode enabled. No `any` in domain or application code                       |
+| Database                 | PostgreSQL     | One database, ACID transactions, immutable financial history                      |
+| ORM                      | Prisma         | Infrastructure layer only — never in domain or application code                   |
+| Authentication           | Clerk          | Anti-corruption layer in `identity` module. `UserId` is the only shared reference |
+| Styling                  | Tailwind CSS   |                                                                                   |
+| UI Components            | shadcn/ui      | Components copied to `src/components/ui/` — no runtime dependency                 |
+| Internationalization     | next-intl      | Presentation layer only. Never in domain or application code                      |
+| Progressive Web App      | PWA support    |                                                                                   |
+| Linting                  | ESLint         | Errors block CI                                                                   |
+| Formatting               | Prettier       | Applied automatically on commit via Husky                                         |
+| Git hooks                | Husky          |                                                                                   |
+| Unit + Integration tests | Vitest         |                                                                                   |
+| End-to-end tests         | Playwright     |                                                                                   |
+| CI/CD                    | GitHub Actions |                                                                                   |
 
 ---
 
@@ -224,11 +236,11 @@ Nexo uses **GitHub Flow**:
 
 ### Testing
 
-| Level | Scope | Framework | Rule |
-|---|---|---|---|
-| Unit | Domain layer only | Vitest | No DB, no network, no framework. Every invariant covered. |
-| Integration | Application layer with real DB | Vitest | Real PostgreSQL — mocks not permitted. |
-| E2E | Critical user flows | Playwright | Runs against staging. |
+| Level       | Scope                          | Framework  | Rule                                                      |
+| ----------- | ------------------------------ | ---------- | --------------------------------------------------------- |
+| Unit        | Domain layer only              | Vitest     | No DB, no network, no framework. Every invariant covered. |
+| Integration | Application layer with real DB | Vitest     | Real PostgreSQL — mocks not permitted.                    |
+| E2E         | Critical user flows            | Playwright | Runs against staging.                                     |
 
 Unit and integration tests are co-located inside the module directory. E2E tests live in `tests/e2e/`.
 

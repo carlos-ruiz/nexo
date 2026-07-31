@@ -1,5 +1,5 @@
 ---
-description: "Create a branch, commit staged changes, and open a PR for this Nexo repo following conventional commits and the PR template. Use when: submitting work for review, opening a PR, creating a pull request."
+description: 'Create a branch, commit staged changes, and open a PR for this Nexo repo following conventional commits and the PR template. Use when: submitting work for review, opening a PR, creating a pull request.'
 argument-hint: "Describe what you're shipping (optional — will be inferred from diff if omitted)"
 agent: agent
 ---

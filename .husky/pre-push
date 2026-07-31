@@ -7,3 +7,5 @@ if [ "$branch" = "main" ]; then
   echo ""
   exit 1
 fi
+
+pnpm audit --audit-level=high

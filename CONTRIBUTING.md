@@ -33,6 +33,18 @@ For version policy and enforcement details, see [README.md](README.md) under Nod
 7. Run production build check:
    pnpm build
 
+## Git Hooks
+
+Husky runs the following hooks automatically:
+
+| Hook         | Trigger      | What it does                                                                                                                                                                                |
+| ------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pre-commit` | Every commit | Runs `lint-staged` — ESLint + Prettier on staged files only. Fixes auto-fixable issues and re-stages them. Aborts the commit if ESLint finds an error it cannot fix.                        |
+| `commit-msg` | Every commit | Validates the commit message against Conventional Commits via `commitlint`. Aborts if the format is wrong.                                                                                  |
+| `pre-push`   | Every push   | Runs `pnpm audit --audit-level=high`. Aborts the push if any `high` or `critical` severity vulnerability is found in the dependency tree. Fix or override the vulnerability before pushing. |
+
+Direct pushes to `main` are also blocked by the `pre-push` hook — all changes must go through a pull request.
+
 ## Notes
 
 - Keep pnpm-lock.yaml committed and up to date.

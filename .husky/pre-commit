@@ -1,2 +1,1 @@
-# Populated when ESLint and Prettier are configured (Next.js project initialization)
-# Will run: npx lint-staged
+pnpm lint-staged

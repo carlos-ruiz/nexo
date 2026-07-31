@@ -31,6 +31,7 @@ ADRs are numbered sequentially and stored in this directory.
 Format: `NNNN-short-title.md`
 
 Examples:
+
 - `0001-use-nextjs-app-router.md`
 - `0002-use-vitest-for-testing.md`
 - `0003-move-liabilities-to-portfolio.md`
@@ -43,11 +44,11 @@ Numbers are zero-padded to four digits. Numbers are never reused, even if an ADR
 
 Each ADR has a status that reflects its current state.
 
-| Status | Meaning |
-|---|---|
-| `Proposed` | The decision is under discussion. Not yet adopted. |
-| `Accepted` | The decision has been approved and is in effect. |
-| `Deprecated` | The decision was once accepted but is no longer relevant. Not replaced. |
+| Status       | Meaning                                                                   |
+| ------------ | ------------------------------------------------------------------------- |
+| `Proposed`   | The decision is under discussion. Not yet adopted.                        |
+| `Accepted`   | The decision has been approved and is in effect.                          |
+| `Deprecated` | The decision was once accepted but is no longer relevant. Not replaced.   |
 | `Superseded` | The decision was replaced by a newer ADR. Link to the superseding record. |
 
 ---
@@ -96,9 +97,9 @@ What are the key reasons for this choice?
 List the options that were evaluated and why they were not chosen.
 
 | Alternative | Why rejected |
-|---|---|
-| Option A | Reason |
-| Option B | Reason |
+| ----------- | ------------ |
+| Option A    | Reason       |
+| Option B    | Reason       |
 
 ---
 
@@ -121,9 +122,9 @@ Are there any risks or trade-offs introduced?
 
 ## Index
 
-| ADR | Title | Status | Date |
-|---|---|---|---|
-| — | _No ADRs yet_ | — | — |
+| ADR | Title         | Status | Date |
+| --- | ------------- | ------ | ---- |
+| —   | _No ADRs yet_ | —      | —    |
 
 New ADRs are added to this index when they are created.
 
