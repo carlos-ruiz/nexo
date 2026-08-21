@@ -1,0 +1,59 @@
+---
+description: Nexo architecture, module boundaries, and dependency rules
+alwaysApply: true
+---
+
+# Nexo Core
+
+Nexo is a modular-monolith personal finance SaaS (hexagonal architecture + DDD). Do not invent modules, aggregates, or patterns outside this structure.
+
+**Deep reference** (read before domain work): `docs/product/modules.md`, `docs/product/domain-model.md`, `docs/product/architecture.md`.
+
+## Layer stack (dependencies point upward only)
+
+```
+Insights (Business Capabilities)
+  ▲
+Finance, Planning, Portfolio (Core Financial Domain)
+  ▲
+Identity, Administration, Integrations (Platform Services)
+```
+
+- Platform Services: no business rules
+- Core Domain: never depends on Insights
+- Insights: consumes Core Domain, never owns financial data
+
+## Module map (one Bounded Context per folder under `src/modules/`)
+
+| Module | Layer | Owns |
+|--------|-------|------|
+| `identity` | Platform | User, auth (Clerk ACL), authorization, preferences |
+| `administration` | Platform | Notifications, audit, feature flags, config, observability |
+| `integrations` | Platform | External connectors, import/export _(future)_ |
+| `finance` | Core | Accounts, Transactions, Categories, Tags, Merchants |
+| `planning` | Core | Budgets, Goals, Cash Flow Plans |
+| `portfolio` | Core | Assets, Liabilities, Credit Cards, Loans |
+| `insights` | Business | Reports, Dashboard, AI, Recommendations |
+
+Every business concept belongs to exactly one module. Shared ownership is forbidden.
+
+## Dependencies
+
+**Allowed:** Core → Platform; Insights → Core; any module → Platform.
+
+**Forbidden:** Core → Insights; circular module deps; cross-module DB/table access; business logic in Platform Services.
+
+Violations need an ADR in `docs/adr/`.
+
+## Module communication (in order)
+
+1. Public Application Services
+2. Domain Events
+3. Read Models (for Insights)
+4. Query Services (read-only)
+
+Never access another module's persistence layer directly.
+
+## Shared kernel (`src/shared-kernel/`)
+
+Only: `Money`, `Currency`, `DateRange`, `UserId`. No business logic. No imports from modules.

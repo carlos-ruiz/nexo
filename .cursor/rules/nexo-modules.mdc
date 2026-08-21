@@ -1,0 +1,35 @@
+---
+description: Hexagonal layer rules for bounded-context modules
+globs: src/modules/**
+alwaysApply: false
+---
+
+# Module structure
+
+Each module under `src/modules/{module}/`:
+
+```
+domain/          # Aggregates, VOs, domain services, port interfaces — pure, no framework
+application/     # Commands, queries, event handlers — orchestrates domain
+infrastructure/  # Prisma repos, external adapters — implements ports
+```
+
+## Layer constraints
+
+- **Domain & application:** strict TypeScript, no `any`, no Prisma, no Next.js, no next-intl
+- **Infrastructure only:** Prisma, Clerk adapters, external APIs
+- **Identity:** Clerk lives behind an anti-corruption layer; only `UserId` crosses module boundaries
+
+## Testing (co-located in module)
+
+| Level | Scope | Rule |
+|-------|-------|------|
+| Unit | `domain/` | Vitest, no DB/network/framework; cover every invariant |
+| Integration | `application/` | Vitest + real PostgreSQL, no mocks |
+| E2E | — | Playwright in `tests/e2e/` |
+
+## Before adding code
+
+1. Confirm the concept belongs in this module (`docs/product/modules.md`)
+2. Confirm aggregates/Vos match `docs/product/domain-model.md`
+3. Expose cross-module access via application services or events — not repositories

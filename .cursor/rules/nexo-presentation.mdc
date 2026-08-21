@@ -1,0 +1,27 @@
+---
+description: Next.js App Router and UI layer conventions
+globs: src/app/**,src/components/**
+alwaysApply: false
+---
+
+# Presentation layer
+
+## Stack
+
+- **Next.js App Router** only — not Pages Router (`src/app/`)
+- **Tailwind CSS** + **shadcn/ui** (copied to `src/components/ui/`, no runtime dep)
+- **next-intl** for i18n — presentation only, never in domain or application
+- UI copy: English + Spanish; all code, comments, and schemas: **English**
+
+## Boundaries
+
+- Presentation calls module **application services** — not repositories or Prisma
+- No business rules in `src/app/` or `src/components/`
+- No financial invariant logic in UI; delegate to modules
+
+## Commits & branches (when committing)
+
+- Conventional Commits: `<type>(<scope>): <description>`
+- Types: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `perf`
+- Scopes: `finance`, `planning`, `portfolio`, `insights`, `identity`, `administration`, `shared-kernel`, `app`, `infra`, `docs`
+- GitHub Flow: short-lived `feat/`, `fix/`, `docs/`, `chore/` branches → PR to `main`
