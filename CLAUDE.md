@@ -1,5 +1,9 @@
 # CLAUDE.md — Nexo
 
+## Cursor
+
+In Cursor, scoped rules derived from this file live in `.cursor/rules/`. Treat this document as the source of truth; when project context changes here, update the rules to match.
+
 ## What is Nexo
 
 Nexo is an AI-native, multilingual personal finance SaaS platform. Its purpose is to help individuals and families make better financial decisions — not just record transactions. It targets a complete financial operating system covering accounts, transactions, credit cards, loans, assets, liabilities, budgets, goals, reports, and AI-powered insights.

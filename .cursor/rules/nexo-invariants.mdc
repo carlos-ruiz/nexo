@@ -1,0 +1,56 @@
+---
+description: Non-negotiable domain invariants — never violate without explicit ADR
+alwaysApply: true
+---
+
+# Nexo Invariants
+
+If a feature breaks any rule below, stop and raise it explicitly. Do not work around invariants.
+
+## Financial history
+
+- Transactions are immutable — never edit or delete
+- Corrections = new Transactions (append-only)
+
+## Financial calculations
+
+- Account balances derived from Transactions, never stored independently
+- Budgets and Goals read financial data; they never modify it
+- Reports never modify data; never query transactional aggregates directly
+- Tags and Merchants never affect calculations
+
+## Accounts
+
+- Archived accounts cannot receive new Transactions
+- Every account has exactly one base currency
+
+## Credit cards
+
+- Available credit ≤ credit limit
+- Closed statements are immutable
+- Each purchase belongs to exactly one statement
+
+## Loans & liabilities
+
+- Outstanding balance cannot go negative
+- Closed loans / settled liabilities cannot receive payments
+- Liabilities are independent from Portfolio Loans
+
+## Categories & tags
+
+- Tags independent from categories
+- System categories cannot be deleted
+- Category hierarchy cannot contain cycles
+- Archived categories remain for historical records
+
+## AI behavior
+
+- AI never auto-modifies financial records
+- Suggestions require explicit user confirmation
+- AI failures must not interrupt core operations
+- Recommendations must be explainable
+
+## Multi-currency
+
+- Use `Money` / `Currency` from shared-kernel — not formatting helpers
+- Support MXN, USD, CAD at minimum; never hardcode currency in domain logic
