@@ -534,6 +534,17 @@ Provide a calendar view that centralizes:
 
 ---
 
+### Credit Card Installments (MSI)
+
+Support manual registration of months-without-interest purchases:
+
+- Record the original purchase once as a Finance Expense.
+- Allocate equal principal installments to consecutive statements.
+- Reserve the unpaid principal against available credit and release it as payments are applied.
+- Keep installments out of expense totals to avoid duplicating the original purchase in reports.
+
+---
+
 ### Debt Management
 
 Expand loan management with:

@@ -550,13 +550,14 @@ Credit Cards model billing cycles, statements and available credit.
 ## Key Invariants
 
 - Available credit cannot exceed the credit limit.
+- Available credit reflects all unpaid card balances, including remaining MSI principal, without counting an installment twice.
 - Closed statements are immutable.
 - Payments reduce outstanding balance.
-- Purchases belong to exactly one statement.
+- Each regular purchase belongs to one statement; each billed installment belongs to exactly one statement.
 
 ## Future Evolution
 
-- Installment purchases
+- MSI purchases: record the original expense once, bill equal principal installments across consecutive statements, and reserve the unpaid principal against available credit until payments are applied. Installments do not create duplicate expenses in reports.
 - Multiple cardholders
 - Rewards programs
 
