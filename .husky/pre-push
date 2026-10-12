@@ -8,4 +8,5 @@ if [ "$branch" = "main" ]; then
   exit 1
 fi
 
-pnpm audit --audit-level=high
+# Ignore this unpatched dev-only advisory until braces publishes a fixed release.
+pnpm audit --audit-level=high --ignore GHSA-vfj7-8cjw-p6xm
