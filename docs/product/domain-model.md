@@ -636,35 +636,43 @@ Represents an informal financial obligation owed to an individual or non-institu
 
 #### CreditCard _(Aggregate Root)_
 
-Represents a revolving credit instrument. Manages billing cycles, statements, and available credit.
+Represents a revolving credit instrument. Manages billing cycles, statements, installment purchases, and available credit.
 
-The CreditCard instrument is distinct from a Transaction. When a user makes a credit card purchase, Finance records the Transaction; Portfolio updates the Statement balance.
+The CreditCard instrument is distinct from a Transaction. Finance records a credit card purchase once as an Expense; Portfolio tracks its effect on the card and statements. For a months-without-interest (MSI) purchase, Portfolio links an installment plan to that Expense and allocates its principal across consecutive statements. The original purchase is not recorded again as an Expense for each installment.
 
 **Entities**
 
-| Entity     | Role                                                      |
-| ---------- | --------------------------------------------------------- |
-| CreditCard | Aggregate root. Represents a revolving credit instrument. |
-| Statement  | Represents a billing period. Immutable once closed.       |
+| Entity              | Role                                                                                     |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| CreditCard          | Aggregate root. Represents a revolving credit instrument.                                |
+| Statement           | Represents a billing period. Immutable once closed.                                      |
+| InstallmentPurchase | An MSI plan linked to one Finance Expense and split into scheduled monthly installments. |
+| Installment         | One scheduled principal amount in an MSI plan, billed on exactly one Statement.          |
 
 **Value Objects**
 
-| Value Object    | Description                                                                                               |
-| --------------- | --------------------------------------------------------------------------------------------------------- |
-| CreditCardId    | Unique identity of the credit card.                                                                       |
-| CreditLimit     | Maximum authorized credit.                                                                                |
-| AvailableCredit | Derived: Credit Limit minus the outstanding balance on the open Statement. Never persisted independently. |
-| BillingCycle    | Day of month when Statements close and when payments are due.                                             |
-| StatementId     | Unique identity of a Statement.                                                                           |
-| StatementPeriod | Start and end dates of a Statement period.                                                                |
-| StatementStatus | Enumeration: Open, Closed.                                                                                |
+| Value Object      | Description                                                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| CreditCardId      | Unique identity of the credit card.                                                                                        |
+| CreditLimit       | Maximum authorized credit.                                                                                                 |
+| AvailableCredit   | Derived: Credit Limit minus total outstanding card balance, including unpaid MSI principal. Never persisted independently. |
+| BillingCycle      | Day of month when Statements close and when payments are due.                                                              |
+| StatementId       | Unique identity of a Statement.                                                                                            |
+| StatementPeriod   | Start and end dates of a Statement period.                                                                                 |
+| StatementStatus   | Enumeration: Open, Closed.                                                                                                 |
+| InstallmentTerm   | Number of consecutive monthly installments in an MSI plan.                                                                 |
+| InstallmentAmount | A monthly principal amount; installments sum exactly to the original purchase amount.                                      |
+| InstallmentNumber | The installment's position within its plan.                                                                                |
 
 **Invariants**
 
 - Available credit cannot exceed the credit limit.
+- Available credit is calculated from the total unpaid card balance, including unpaid regular purchases and remaining MSI principal across open and closed Statements; the same MSI amount is never counted twice.
 - Closed statements are immutable.
-- Purchases belong to exactly one Statement.
-- Payments reduce the outstanding balance of the open Statement.
+- Each purchase belongs to exactly one credit card. A regular purchase is billed on one Statement; each MSI installment is billed on exactly one Statement.
+- An MSI plan links to one immutable Finance Expense. Its interest-free monthly installments span consecutive Statements and sum exactly to the original purchase amount; any currency minor-unit rounding remainder is assigned to the final installment.
+- The original MSI purchase is counted as an Expense once, not again when its installments are billed.
+- Payments reduce the total outstanding card balance; applying a payment does not mutate a closed Statement.
 
 ---
 
@@ -701,13 +709,14 @@ Represents an installment-based debt instrument with a structured repayment sche
 
 ### Domain Services
 
-| Service                      | Responsibility                                                                                                                    |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| NetWorthCalculator           | Aggregates asset valuations, liability balances, loan balances, and credit card balances to compute the user's current net worth. |
-| AvailableCreditCalculator    | Derives available credit from the credit limit and the open Statement balance.                                                    |
-| OutstandingBalanceCalculator | Derives current outstanding balances for Loans and Liabilities from original amounts and all recorded payments.                   |
-| AmortizationService          | Generates a payment schedule from loan terms: principal, interest rate, and term length.                                          |
-| StatementClosingService      | Closes the current Statement and opens a new one at the end of a billing cycle.                                                   |
+| Service                      | Responsibility                                                                                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| NetWorthCalculator           | Aggregates asset valuations, liability balances, loan balances, and credit card balances to compute the user's current net worth.           |
+| AvailableCreditCalculator    | Derives available credit from the credit limit and total unpaid card balance, including remaining MSI principal without double-counting it. |
+| InstallmentScheduleService   | Splits an MSI purchase amount into equal monthly principal installments across consecutive Statements, accounting for currency rounding.    |
+| OutstandingBalanceCalculator | Derives current outstanding balances for Loans and Liabilities from original amounts and all recorded payments.                             |
+| AmortizationService          | Generates a payment schedule from loan terms: principal, interest rate, and term length.                                                    |
+| StatementClosingService      | Closes the current Statement and opens a new one at the end of a billing cycle.                                                             |
 
 ---
 

@@ -360,6 +360,22 @@ Support:
 
 ---
 
+## Credit Card Installments (MSI)
+
+MSI support is a future credit card capability, not an MVP requirement. It follows these product rules:
+
+- Record the purchase once for its full amount as a Finance Expense.
+- Split that amount into equal, interest-free monthly principal installments on consecutive credit card statements. Any currency rounding remainder belongs to the final installment.
+- Reserve the unpaid purchase amount against the credit limit; available credit is released as payments are applied to the outstanding balance.
+- Count the original purchase as an expense once. Statement installments must not duplicate spending in reports.
+- Register the plan manually using the term and billing schedule provided by the card issuer; no bank integration is required.
+
+Refunds, cancellations, early payoff, and missed or partial payments require separate rules and are not defined by this MSI capability.
+
+Reference: [BBVA — Qué son y cómo funcionan los meses sin intereses](https://www.bbva.mx/educacion-financiera/creditos/tarjeta-de-credito/que-son-y-como-funcionan-los-meses-sin-intereses.html).
+
+---
+
 ## Advanced AI
 
 - Cash flow forecasting
